@@ -26,16 +26,22 @@ const uploadFile = async filePath => {
   const bucketName = config.TELNYX_MMS_S3_BUCKET;
   const fileName = path.basename(filePath);
   const fileStream = fs.createReadStream(filePath);
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     fileStream.once('error', reject);
-    s3.upload(
-        {
-          Bucket: bucketName,
-          Key: fileName,
-          Body: fileStream,
-          ACL: 'public-read'
-        }
-    ).promise().then(() => {resolve(`https://${bucketName}.s3.amazonaws.com/${fileName}`)}, reject);
+    try {
+      await s3.upload(
+          {
+            Bucket: bucketName,
+            Key: fileName,
+            Body: fileStream,
+            ACL: 'public-read'
+          }
+      ).promise();
+      resolve(`https://${bucketName}.s3.amazonaws.com/${fileName}`);
+    }
+    catch (e) {
+      reject(e);
+    }
   });
 };
 
@@ -60,14 +66,11 @@ const inboundMessageController = async (req, res) => {
   const toNumber = event.payload.to[0].phone_number;
   const fromNumber = event.payload['from'].phone_number;
   const medias = event.payload.media;
-  const mediaUrls = [];
-  for (let i = 0; i < medias.length; i++) {
-    const fileLocation = await downloadFile(medias[i].url);
-    const mediaUrl = await uploadFile(fileLocation);
-    mediaUrls.push(mediaUrl);
-  }
-  // const mediaPromises = medias.map(media => {downloadFile(media.url).then(uploadFile)});
-  // const mediaUrls = await Promise.all(mediaPromises);
+  const mediaPromises = medias.map(async media => {
+    const fileName = await downloadFile(media.url)
+    return uploadFile(fileName);
+  });
+  const mediaUrls = await Promise.all(mediaPromises);
   try {
     const messageRequest = {
       from: toNumber,

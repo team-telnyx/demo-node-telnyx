@@ -1,7 +1,7 @@
 # Custom
 .env
 .idea/*
-.jpeg
+*/**.jpeg
 
 # Logs
 logs

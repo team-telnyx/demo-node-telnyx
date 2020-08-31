@@ -10,12 +10,12 @@ const app = express();
 
 const webhookValidator = (req, res, next) => {
   try {
-    // telnyx.webhooks.constructEvent(
-    //   JSON.stringify(req.body, null, 2),
-    //   req.header('telnyx-signature-ed25519'),
-    //   req.header('telnyx-timestamp'),
-    //   config.TELNYX_PUBLIC_KEY
-    // )
+    telnyx.webhooks.constructEvent(
+      JSON.stringify(req.body, null, 2),
+      req.header('telnyx-signature-ed25519'),
+      req.header('telnyx-timestamp'),
+      config.TELNYX_PUBLIC_KEY
+    )
     next();
     return;
   }
