@@ -1,0 +1,19 @@
+{
+  "name": "express-messaging",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Dan Tolbert",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "aws-sdk": "^2.743.0",
+    "axios": "^0.20.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "telnyx": "^1.10.0"
+  }
+}
