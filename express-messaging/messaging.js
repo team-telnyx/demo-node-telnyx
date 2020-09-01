@@ -29,14 +29,13 @@ const uploadFile = async filePath => {
   return new Promise(async (resolve, reject) => {
     fileStream.once('error', reject);
     try {
-      await s3.upload(
-          {
-            Bucket: bucketName,
-            Key: fileName,
-            Body: fileStream,
-            ACL: 'public-read'
-          }
-      ).promise();
+      const s3UploadParams = {
+        Bucket: bucketName,
+        Key: fileName,
+        Body: fileStream,
+        ACL: 'public-read'
+      }
+      await s3.upload(s3UploadParams).promise();
       resolve(`https://${bucketName}.s3.amazonaws.com/${fileName}`);
     }
     catch (e) {
@@ -62,7 +61,8 @@ const downloadFile = async url => {
 const inboundMessageController = async (req, res) => {
   res.sendStatus(200); // Play nice and respond to webhook
   const event = req.body.data;
-  const dlrUrl = (new URL('/messaging/outbound', `${req.protocol}://${req.hostname}`).href);
+  console.log(`Received inbound message with ID: ${event.payload.id}`)
+  const dlrUrl = (new URL('/messaging/outbound', `${req.protocol}://${req.hostname}`)).href;
   const toNumber = event.payload.to[0].phone_number;
   const fromNumber = event.payload['from'].phone_number;
   const medias = event.payload.media;
