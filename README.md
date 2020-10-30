@@ -28,6 +28,7 @@ You will need to set up:
 | Example                                        | Description                                                                                                         |
 |:-----------------------------------------------|:--------------------------------------------------------------------------------------------------------------------|
 | [Express Messaging](express-messaging)         | Example working with inbound MMS & SMS messages, downloading media from inbound MMS, and uploading media to AWS S3. |
+| [Webinar Demo](webinar-demo) | Example code from the intro to [Node Webinar](https://telnyx.com/resources/node-sdk-recap) |
 
 ### Install
 

@@ -1,0 +1,19 @@
+{
+  "name": "webinar-demo",
+  "version": "0.0.1",
+  "description": "Send and receive messages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "telnyx"
+  ],
+  "author": "Dan Tolbert",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "telnyx": "^1.10.1"
+  }
+}
