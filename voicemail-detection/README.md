@@ -59,7 +59,7 @@ BASE_URL="http://your-url.ngrok.io"
 
 | Callback Type                    | URL                              |
 |:---------------------------------|:---------------------------------|
-| Outbound Call-Control Status Callback | `{ngrok-url}/call-control/outbound` |
+| Outbound Call-Control Status Callback | `{ngrok-url}/call-control/inbound` |
 
 ### Install
 
