@@ -26,7 +26,12 @@ app.post('/calls', async (req, res) => {
   }
   try {
     const { data: call } = await telnyx.calls.create(createCallRequest);
-    res.status(201).send(call.call_control_id);
+    res.status(201).send({
+          call_control_id: call.call_control_id,
+          call_leg_id: call.call_leg_id,
+          call_session_id: call.call_session_id
+        });
+    console.log(`Created outbound call_session_id: ${call.call_session_id}`);
   }
   catch (e) {
     console.log('Error creating call');
