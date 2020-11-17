@@ -70,6 +70,12 @@ Run the following commands to get started
 $ git clone https://github.com/team-telnyx/demo-node-telnyx.git
 ```
 
+### Notes!
+
+TeXML sends webhooks with Content-Type: `application/x-www-form-urlencoded`. As such; our express application should be configured to accept form encoded payloads.
+
+Adding `app.use(express.urlencoded({ extended: true }));` to the application allows us to reference `req.body` to get the Webhook data.
+
 ### Ngrok
 
 This application is served on the port defined in the runtime environment (or in the `.env` file). Be sure to launch [ngrok](https://developers.telnyx.com/docs/v2/development/ngrok?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) for that port
