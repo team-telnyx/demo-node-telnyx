@@ -6,8 +6,8 @@ require('dotenv').config()
 // Library Requirements
 const express = require('express');
 const path = require('path');
-const axios = require('axios');
-const mysql = require('mysql');
+const verify = require('./telnyxVerify');
+const db = require('./db');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const Connections = require('telnyx/lib/resources/Connections');
@@ -38,91 +38,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-// Async function to initiate a new verification request
-const create2FA = async (number) => {
-  //Call Telnyx API to create a new 2FA with given number
-  try {
-    const headers = {
-      "Authorization": "Bearer " + process.env.TELNYX_API_KEY,
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    };
-    const verify_request = {
-      phone_number: number,
-      twofa_profile_id: process.env.TELNYX_VERIFY_KEY,
-      type: "sms",
-      timeout: 300
-    };
-    const url = "https://api.telnyx.com/v2/verifications";
 
-    const telnyxResponse = await axios(
-      {
-        method: 'post',
-        url: url,
-        headers: headers,
-        data: verify_request
-      }
-    );
-    console.log('Verification created with id: ', telnyxResponse.data.data.id);
-  }
-  catch(e) {
-    console.log('Error creating verification');
-    console.log(e);
-    return false;
-  }
-  return true;
-}
-
-// Async function to initiate a new verification submission with code
-const verify2FA = async (number, code) => {
-  //Call Telnyx API to submit a verify code
-  try {
-    const headers = {
-      "Authorization": "Bearer " + process.env.TELNYX_API_KEY,
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    };
-    const verify_request = {
-      code: code
-    };
-    const url = "https://api.telnyx.com/v2/verifications/by_phone_number/" + number + "/actions/verify"
-
-    const telnyxResponse = await axios(
-      {
-        method: 'post',
-        url: url,
-        headers: headers,
-        data: verify_request
-      }
-    );
-    console.log('Verification success with response: ', telnyxResponse.data.data.id);
-  }
-  catch(e) {
-    console.log('Incorrect Verfication!');
-    console.log(e);
-    return false;
-  }
-  return true;
-}
-
-// Async function to initiate a new verification submission with code
-const insertUser = async (name, password, number) => {
-  const query = 'INSERT INTO `users`(`username`, `password`, `phone`, `verified`) VALUES (?, ?, ?, 0)';
-  connection.query(query, [name, password, number], (err, result) => {
-    if (err) throw err;
-
-    console.log(`Changed ${result.changedRows} row(s)`);
-  });
-}
-
-const verifyUser = async (name) => {
-  const query = 'UPDATE `users` SET `verified`=1 WHERE `username`=?';
-  connection.query(query, [name], (err, result) => {
-    if (err) throw err;
-
-    console.log(`Changed ${result.changedRows} row(s)`);
-  });
-}
 
 // Simple sign up page with built in post request
 app.get('/', function(request, response) {
@@ -140,7 +56,7 @@ app.get('/login', function(request, response) {
 	response.sendFile(path.join(__dirname+'/templates/login.html'));
 });
 
-// Auth page 
+// Auth page
 app.post('/auth', async(request, response) => {
 
   // Retrieve attributes from post request
@@ -148,9 +64,17 @@ app.post('/auth', async(request, response) => {
   var password = request.body.password;
   var phone = request.body.number;
 
-  insertUser(username, password, phone);
+  try {
+    await db.insertUser(username, password, phone);
+  }
+  catch (e){
+    console.log("error updating database");
+    res.status(500);
+    res.send(e);
+    return;
+  }
 
-  const telnyx_response = await create2FA(phone);
+  const telnyx_response = await verify.create2FA(phone);
 
   // If the verification was successfully created then we move to verify
 	if (response) {
@@ -165,8 +89,8 @@ app.post('/auth', async(request, response) => {
 app.post('/verify', async(request, response) => {
   console.log('Cookies: ', request.cookies);
   const code_try = request.body.code;
-  const telnyx_response = await verify2FA(request.cookies.number, code_try);
-  verifyUser(request.cookies.username);
+  const telnyx_response = await verify.verify2FA(request.cookies.number, code_try);
+  db.verifyUser(request.cookies.username);
 	if (response) {
 		response.sendFile(path.join(__dirname+'/templates/welcome.html'));
 	} else {
