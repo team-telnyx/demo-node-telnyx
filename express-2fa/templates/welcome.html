@@ -70,11 +70,9 @@
       <img src="https://developers.telnyx.com/assets/telnyx-logo.svg" class="telnyx_logo" />
     </div>
 		<div class="login-form">
-      <h1>Please verify your phone number below.</h1>
-			<form action="verify" method="POST">
-				<input type="text" name="code" placeholder="Pin Code" required>
-        <input type="submit">
-      </form>
+      <h1>Welcome, {{user}}!</h1>
+      <h3>You have succcessfully verified your phone number.</h3>
+      <p><a href="/signup">Sign Up</a> a new user.</p>
 		</div>
 	</body>
 </html>

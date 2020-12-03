@@ -2,8 +2,32 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Login Form Tutorial</title>
+		<title>Telnyx Verify Demo</title>
 		<style>
+    body {
+      background-color: #1d2241;
+      font-family: Tahoma, Geneva, sans-serif;
+    }
+    a {
+      color: #00c08b;
+      text-decoration: none;
+    }
+    p {
+      color: rgba(255, 255, 255, 0.6);
+      
+    }
+    .error {
+      color: red;
+    }
+    .telnyx_logo {
+      width: 15%
+    }
+    .heading {
+      text-align: center;
+			color: #00c08b;
+			font-size: 36px;
+			padding: 20px 0 20px 0;
+    }
 		.login-form {
 			width: 300px;
 			margin: 0 auto;
@@ -11,7 +35,7 @@
 		}
 		.login-form h1 {
 			text-align: center;
-			color: #4d4d4d;
+			color: #00c08b;
 			font-size: 24px;
 			padding: 20px 0 20px 0;
 		}
@@ -26,7 +50,7 @@
 		.login-form input[type="submit"] {
 			width: 100%;
 			padding: 15px;
-			background-color: #535b63;
+			background-color: #00c08b;
 			border: 0;
 			box-sizing: border-box;
 			cursor: pointer;
@@ -36,14 +60,18 @@
 		</style>
 	</head>
 	<body>
+    <div class="heading">
+      <img src="https://developers.telnyx.com/assets/telnyx-logo.svg" class="telnyx_logo" />
+    </div>
 		<div class="login-form">
 			<h1>New User Sign Up</h1>
 			<form action="auth" method="POST">
 				<input type="text" name="username" placeholder="Username" required>
 				<input type="password" name="password" placeholder="Password" required>
-                <input type="text" name="number" placeholder="Phone Number" required>
-                <input type="submit">
-			</form>
+        <input type="text" name="number" placeholder="Phone Number" required>
+        <input type="submit">
+      </form>
+      <p>Already have an account? <a href="/login">Login</a></p>
 		</div>
 	</body>
 </html>
