@@ -70,11 +70,15 @@
       <img src="https://developers.telnyx.com/assets/telnyx-logo.svg" class="telnyx_logo" />
     </div>
 		<div class="login-form">
-      <h1>Please verify your phone number below.</h1>
+	  <h1>Hello, {{user}}.</h1>
+	  <h3>Please verify your phone number.</h3>
 			<form action="verify" method="POST">
 				<input type="text" name="code" placeholder="Pin Code" required>
         <input type="submit">
-      </form>
+	  </form>
+	  {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
 		</div>
 	</body>
 </html>

@@ -16,6 +16,9 @@
       color: rgba(255, 255, 255, 0.6);
       
     }
+    .error {
+      color: red;
+    }
     .telnyx_logo {
       width: 15%
     }
@@ -24,9 +27,6 @@
 			color: #00c08b;
 			font-size: 36px;
 			padding: 20px 0 20px 0;
-    }
-    .error {
-      color: red;
     }
 		.login-form {
 			width: 300px;
@@ -64,13 +64,17 @@
       <img src="https://developers.telnyx.com/assets/telnyx-logo.svg" class="telnyx_logo" />
     </div>
 		<div class="login-form">
-			<h1>Returning User</h1>
-			<form action="login" method="POST">
+			<h1>New User Sign Up</h1>
+			<form action="auth" method="POST">
 				<input type="text" name="username" placeholder="Username" required>
 				<input type="password" name="password" placeholder="Password" required>
+        <input type="text" name="number" placeholder="Phone Number" required>
         <input type="submit">
       </form>
-      <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+	  <p>Already have an account? <a href="/login">Login</a></p>
+	  {% if error %}
+        <p class="error"><strong>Error:</strong> {{ error }}
+      {% endif %}
 		</div>
 	</body>
 </html>
