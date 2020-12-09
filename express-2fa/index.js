@@ -95,6 +95,7 @@ app.post('/auth', async(request, response) => {
   catch (e){
     console.log("error updating database.");
     response.status(500);
+    console.log(e);
     response.send(e);
     return;
   }
@@ -109,6 +110,7 @@ app.post('/auth', async(request, response) => {
     catch (e){
       console.log("error updating database.");
       response.status(500);
+      console.log(e);
       response.send(e);
       return;
     }
@@ -121,6 +123,7 @@ app.post('/auth', async(request, response) => {
     catch (e) {
       console.log("Error creating new code.");
       response.status(500);
+      console.log(e);
       response.send(e);
     }
   
@@ -132,8 +135,6 @@ app.post('/auth', async(request, response) => {
       response.end();
     }
   }
-
-  
 });
 
 // Verify page retrieves try from post request and validates it
@@ -164,6 +165,7 @@ app.post('/verify', async(request, response) => {
     catch (e){
       console.log("error updating database");
       response.status(500);
+      console.log(e);
       response.send(e);
       return;
     }
