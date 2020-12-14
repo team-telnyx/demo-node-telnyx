@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const TELNYX_PUBLIC_KEY=process.env.TELNYX_PUBLIC_KEY
 const TELNYX_API_KEY=process.env.TELNYX_API_KEY
-const TELNYX_APP_PORT=8000
+const PORT=process.env.PORT
 const telnyx = require('telnyx')(TELNYX_API_KEY);
 
 const express = require('express');
@@ -63,5 +63,5 @@ const outboundMessageController = async (req, res) => {
 app.post('/inbound', inboundMessageController);
 app.post('/outbound', outboundMessageController);
 
-app.listen(TELNYX_APP_PORT);
-console.log(`Server listening on port ${TELNYX_APP_PORT}`);
+app.listen(PORT);
+console.log(`Server listening on port ${PORT}`);
