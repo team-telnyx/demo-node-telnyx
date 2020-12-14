@@ -1,6 +1,6 @@
 <div align="center">
 
-# Telnyx-Node MMS and SMS Getting Started
+# Telnyx-Node Verify Getting Started
 
 ![Telnyx](../logo-dark.png)
 
