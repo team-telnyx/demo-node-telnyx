@@ -6,8 +6,6 @@ require('dotenv').config()
 // Library Requirements
 const express = require('express');
 const nunjucks = require('nunjucks');
-const path = require('path');
-const verify = require('./telnyxVerify');
 const db = require('./db');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -118,7 +116,12 @@ app.post('/auth', async(request, response) => {
     let telnyx_response;
   
     try {
-      telnyx_response = await verify.create2FA(phone);
+      telnyx_response = await telnyx.verifications.create({
+        verify_profile_id: process.env.TELNYX_VERIFY_KEY,
+        phone_number: phone,
+        type: "sms",
+        timeout: 300
+      });
     }
     catch (e) {
       console.log("Error creating new code.");
@@ -146,7 +149,7 @@ app.post('/verify', async(request, response) => {
   let telnyx_response;
 
   try {
-    telnyx_response = await verify.verify2FA(request.cookies.number, code_try);
+    telnyx_response = await telnyx.verifications.byPhoneNumber.submit(request.cookies.number, {code: code_try});
   }
   catch (e) {
     console.log("Error submitting code.");
@@ -156,7 +159,7 @@ app.post('/verify', async(request, response) => {
   }
 
   // If we got the correct code continue
-	if (telnyx_response.data.data.response_code == "accepted") {
+	if (telnyx_response.data.response_code == "accepted") {
 
     // Verify the user
     try {
