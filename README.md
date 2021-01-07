@@ -31,6 +31,7 @@ You will need to set up:
 | [Webinar Demo](webinar-demo)               | Example code from the intro to [Node Webinar](https://telnyx.com/resources/node-sdk-recap)                                                                                            |
 | [Voicemail Detection](voicemail-detection) | Example code to detect and leave a voicemail                                                                                                                                          |
 | [Outbound Call IVR](outbound-call-ivr)     | Example code to create an outbound call and present the callee with an option to press some digits. Leverages [TeXML](https://developers.telnyx.com/docs/v2/call-control/texml-setup) |
+| [Simple Call Control Application](express-call-control)     | Example code to create a simple inbound call handler that speaks a message back as well as a simple form to submit an outbound call |
 
 ### Install
 
