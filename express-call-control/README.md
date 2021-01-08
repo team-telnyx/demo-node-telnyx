@@ -54,9 +54,36 @@ Make a copy of [`.env.sample`](./.env.sample) and save as `.env` and update the 
 ```
 TELNYX_API_KEY=""
 TELNYX_NUMBER=""
-TELNYX_CALL_CONTROL_ID=""
+TELNYX_CONNECTION_ID=""
 TELNYX_APP_PORT=8000
 ```
+
+### Ngrok
+
+This application is served on the port defined in the runtime environment (or in the `.env` file). Be sure to launch [ngrok](https://developers.telnyx.com/docs/v2/development/ngrok?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) for that port
+
+```
+./ngrok http 8000
+```
+
+> Terminal should look _something_ like
+
+```
+ngrok by @inconshreveable                                                                                                                               (Ctrl+C to quit)
+
+Session Status                online
+Account                       Little Bobby Tables (Plan: Free)
+Version                       2.3.35
+Region                        United States (us)
+Web Interface                 http://127.0.0.1:4040
+Forwarding                    http://your-url.ngrok.io -> http://localhost:8000
+Forwarding                    https://your-url.ngrok.io -> http://localhost:8000
+
+Connections                   ttl     opn     rt1     rt5     p50     p90
+                              0       0       0.00    0.00    0.00    0.00
+```
+
+At this point you can point your [Call Control Application](https://portal.telnyx.com/#/app/call-control/applications) webhook url to generated ngrok URL + path. For this example, the url will be `http://{your-url}.ngrok.io/call_control`
 
 ### Install
 
