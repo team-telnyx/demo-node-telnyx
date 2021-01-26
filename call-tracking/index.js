@@ -14,5 +14,5 @@ const bindingsPath = '/bindings'
 const bindings = require('./bindings');
 app.use(bindingsPath, bindings);
 
-app.listen(process.env.TELNYX_APP_PORT);
-console.log(`Server listening on port ${process.env.TELNYX_APP_PORT}`);
+app.listen(process.env.PORT);
+console.log(`Server listening on port ${process.env.PORT}`);
