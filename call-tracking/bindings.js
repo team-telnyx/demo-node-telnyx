@@ -5,8 +5,8 @@ const db = require('./db');
 const CONNECTION_ID = process.env.TELNYX_CONNECTION_ID;
 
 const searchNumbers = async (req, res, next) => {
-  if (!req.body.areaCode || !req.body.destinationPhoneNumber
-      || req.body.areaCode.length !== 3) {
+  const isInvalidRequest = (!req.body.areaCode || !req.body.destinationPhoneNumber || req.body.areaCode.length !== 3)
+  if (isInvalidRequest) {
     res.send({
       message: 'Invalid search criteria, please send 3 digit areaCode',
       example: '{ "areaCode": "919", "destinationPhoneNumber": "+19198675309" }'
@@ -22,8 +22,7 @@ const searchNumbers = async (req, res, next) => {
         limit: 1
       }
     });
-    const phoneNumber = availableNumbers.data.reduce((a, e) => e.phone_number,
-        '');
+    const phoneNumber = availableNumbers.data.reduce((a, e) => e.phone_number, '');
     if (!phoneNumber) {
       res.send({message: 'No available phone numbers'}).status(200);
     } else {
@@ -48,7 +47,6 @@ const orderNumber = async (req, res, next) => {
       }]
     });
     res.locals.phoneNumberOrder = result.data;
-    res.send(result.data);
     next();
   } catch (e) {
     const message = `Error ordering number: ${res.locals.phoneNumber}`
@@ -60,8 +58,10 @@ const orderNumber = async (req, res, next) => {
 
 const saveBinding = async (req, res) => {
   try {
-    db.addPhoneNumberBinding(res.locals.phoneNumber,
-        req.body.destinationPhoneNumber)
+    const telnyxPhoneNumber = res.locals.phoneNumber;
+    const destinationPhoneNumber = req.body.destinationPhoneNumber;
+    db.addPhoneNumberBinding(telnyxPhoneNumber, destinationPhoneNumber);
+    res.send(res.locals.phoneNumberOrder);
   } catch (e) {
     res.send(e).status(409);
   }
@@ -79,4 +79,4 @@ const getBindings = async (req, res) => {
 
 router.route('/')
 .post(searchNumbers, orderNumber, saveBinding)
-.get(getBindings)
+.get(getBindings);
