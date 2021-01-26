@@ -1,10 +1,4 @@
-const bindings = [
-  {
-    "telnyxPhoneNumber": "+19194598952",
-    "destinationPhoneNumber": "+19197891146",
-    "calls": []
-  }
-];
+const bindings = [];
 module.exports.bindings = bindings
 
 module.exports.addPhoneNumberBinding = (telnyxPhoneNumber,
