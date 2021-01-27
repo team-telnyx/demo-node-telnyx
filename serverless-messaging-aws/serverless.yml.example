@@ -20,9 +20,9 @@ provider:
   # the following line. Also, make sure to not
   # commit your .env.
   environment:
+    stage: dev
     message_table_name: YOUR_MESSAGE_TABLE_NAME
     outbound_status_table_name: YOUR_OUTBOUND_STATUS_TABLE_NAME
-    outbound_status_endpoint: YOUR_ENDPOINT_GENERATED_BY_AWS
     inbound_message_table_name: YOUR_INBOUND_MESSAGE_TABLE_NAME
     telnyx_api_key: YOUR_TELNYX_API_KEY
     auth_username: username
