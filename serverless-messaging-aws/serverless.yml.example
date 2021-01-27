@@ -1,0 +1,100 @@
+# NOTE: update this with your service name
+service: telnyx-serverless-messaging
+
+# Create an optimized package for our functions
+package:
+  individually: true
+
+plugins:
+  - serverless-bundle # Package our functions with Webpack
+  - serverless-offline
+  - serverless-dotenv-plugin # Load .env as environment variables
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: dev
+  region: us-east-2
+  # To load environment variables externally
+  # rename env.example to .env and uncomment
+  # the following line. Also, make sure to not
+  # commit your .env.
+  environment:
+    message_table_name: YOUR_MESSAGE_TABLE_NAME
+    outbound_status_table_name: YOUR_OUTBOUND_STATUS_TABLE_NAME
+    outbound_status_endpoint: YOUR_ENDPOINT_GENERATED_BY_AWS
+    inbound_message_table_name: YOUR_INBOUND_MESSAGE_TABLE_NAME
+    telnyx_api_key: YOUR_TELNYX_API_KEY
+    auth_username: username
+    auth_password: password
+
+  # 'iamRoleStatements' defines the permission policy for the Lambda function.
+  # In this case Lambda functions are granted with permissions to access DynamoDB.
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource: "arn:aws:dynamodb:us-east-2:*:*"
+
+functions:
+
+  send:
+    # Defines an HTTP API endpoint that can be used to send a telnyx message
+    # - path: url path is /send
+    # - method: POST request
+    handler: send.main
+    events:
+      - http:
+          path: messages
+          method: post
+          cors: true
+
+  get:
+    # Defines an HTTP API endpoint that calls the main function in get.js
+    # - path: url path is /messages/{id}
+    # - method: GET request
+    handler: get.main
+    events:
+      - http:
+          path: messages/{id}
+          method: get
+          cors: true
+
+  list:
+    # Defines an HTTP API endpoint that calls the main function in list.js
+    # - path: url path is /messages
+    # - method: GET request
+    handler: list.main
+    events:
+      - http:
+          path: messages
+          method: get
+          cors: true
+
+  inbound:
+    # Defines an HTTP API endpoint that can accept inbound messages and add them to dynamodb
+    # - path: url path is /send
+    # - method: POST request
+    handler: inbound.main
+    events:
+      - http:
+          path: telnyx/callbacks/inbound
+          method: post
+          cors: true
+
+  outbound:
+    # Defines an HTTP API endpoint that can accept outbound status updates
+    # - path: url path is /send
+    # - method: POST request
+    handler: outbound.main
+    events:
+      - http:
+          path: telnyx/callbacks/outbound
+          method: post
+          cors: true

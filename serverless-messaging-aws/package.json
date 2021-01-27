@@ -1,0 +1,26 @@
+{
+  "name": "telnyx-serverless-messaging",
+  "version": "2.2.0",
+  "description": "A Node.js starter for Serverless Framework with ES6 and TypeScript support",
+  "main": "handler.js",
+  "scripts": {
+    "test": "serverless-bundle test"
+  },
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AnomalyInnovations/serverless-nodejs-starter.git"
+  },
+  "devDependencies": {
+    "serverless-bundle": "3.2.0",
+    "serverless-dotenv-plugin": "^2.1.1",
+    "serverless-offline": "^5.3.3"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.831.0",
+    "telnyx": "^1.11.0",
+    "url-join": "^4.0.1",
+    "uuid": "^8.3.2"
+  }
+}
