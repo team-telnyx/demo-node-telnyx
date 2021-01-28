@@ -82,6 +82,8 @@ $ serverless invoke local --function {function-name} --path mocks/{function-even
 After deployment, you should receive endpoint URLs that you can begin testing. We recommend [Postman](https://www.postman.com/) for thoroughly testing these endpoints.
 
 ### Required attributes for each endpoint
+Ensure BASIC Authorization with matching `username` and `password` as configured in the `serverless.yml` file.
+
 POST /Messages (sending a message with the Telnyx API)
 `to_number` - phone number to send the text to
 `from_number` - a telnyx phone number associated with your account
@@ -89,8 +91,7 @@ POST /Messages (sending a message with the Telnyx API)
 `media_urls` - an array of media urls to send (images, etc.)
 
 GET /Messages (retrieve a list of messages with optional limit)
-Query Parameter `limit` - the limit on amount of messages to retrieve
-Example GET Url `https://i3twermzeg.execute-api.us-east-2.amazonaws.com/dev/messages?limit=5`
+Query Parameter `limit` - the limit on amount of messages to retrieve. (Example GET Url `https://i3twermzeg.execute-api.us-east-2.amazonaws.com/dev/messages?limit=5`)
 
 GET /Messages/{id}
 `id` in the URL is the messageId of the message you want to retrieve
