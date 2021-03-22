@@ -1,0 +1,33 @@
+{
+  "name": "express-texml-ivr",
+  "version": "1.0.0",
+  "description": "IVR with Telnyx TeXML",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/team-telnyx/demo-node-telnyx.git"
+  },
+  "keywords": [
+    "node",
+    "ivr",
+    "texml",
+    "twiml",
+    "voice"
+  ],
+  "author": "Dan Tolbert",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/team-telnyx/demo-node-telnyx/issues"
+  },
+  "homepage": "https://github.com/team-telnyx/demo-node-telnyx#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "telnyx": "^1.12.0",
+    "xml-formatter": "^2.4.0"
+  }
+}
