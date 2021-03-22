@@ -26,7 +26,7 @@ module.exports.transferTeXML = (greeting, sip, pstn) => {
   return xmlFormat(`<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="alice">${greeting}</Say>
-  <Dial>${sipTexmlList}${pstnTexmlList}</Dial>
+  <Dial action="dialFinished">${sipTexmlList}${pstnTexmlList}</Dial>
   <Hangup/>
 </Response>`);
 }

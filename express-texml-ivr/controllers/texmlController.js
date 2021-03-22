@@ -46,6 +46,13 @@ const recordStatusController = async (req, res) => {
   res.sendStatus(200);
 }
 
+const dialFinishedController = async (req, res) => {
+  console.log(req.body);
+  const event = req.body;
+  res.type("application/xml");
+  res.send(texml.hangupTeXML(hangupSentence));
+}
+
 router.route('/inbound')
   .post(inboundPSTNAnswerController)
 
@@ -58,3 +65,5 @@ router.route('/recordFinished')
 router.route('/recordStatus')
     .post(recordStatusController)
 
+router.route('/dialFinished')
+    .post(dialFinishedController)
