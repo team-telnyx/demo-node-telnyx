@@ -1,0 +1,13 @@
+[
+  {
+    "phoneNumber": "+19192058844",
+    "voicemailUrl": "https://yourS3.amazonaws.com/vmGreeting.wav",
+    "sip": [
+      "hello@sip.telnyx.com",
+      "world@sip.telnyx.com"
+    ],
+    "pstn": [
+      "+19198675309"
+    ]
+  }
+]
