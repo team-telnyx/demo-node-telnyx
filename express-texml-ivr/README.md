@@ -2,7 +2,7 @@
 
 # Telnyx-Node TeXML & IVR Demo
 
-![Telnyx](logo-dark.png)
+![Telnyx](../logo-dark.png)
 
 Sample application demonstrating Telnyx-Node IVR with TeXML
 
