@@ -29,4 +29,4 @@ module.exports.transferTeXML = (greeting, sip, pstn) => {
   <Dial action="dialFinished">${sipTexmlList}${pstnTexmlList}</Dial>
   <Hangup/>
 </Response>`);
-}
+};

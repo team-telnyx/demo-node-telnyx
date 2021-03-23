@@ -1,14 +1,15 @@
 require('dotenv').config()
-
 const express = require('express');
-const texmlPath = '/texml';
-
 const app = express();
 const http = require('http').createServer(app);
+app.use(express.json());
+
+app.route('/hello', (req, res) => {
+    res.send('world');
+})
 
 const texmlController = require('./controllers/texmlController');
-
-app.use(express.json());
+const texmlPath = '/texml';
 app.use(texmlPath, express.urlencoded({ extended: true }), texmlController);
 
 const port = process.env.PORT || 3000;
