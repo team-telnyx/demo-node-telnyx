@@ -21,9 +21,10 @@ const app = express();
 const http = require('http').createServer(app);
 app.use(express.json());
 
-app.route('/hello', (req, res) => {
-    res.send('world');
-});
+app.get('/', (req, res) => {
+    res.send('Hello World 👋 🌎');
+})
+
 
 const port = process.env.PORT || 3000;
 http.listen(port);
@@ -101,8 +102,8 @@ const app = express();
 const http = require('http').createServer(app);
 app.use(express.json());
 
-app.route('/hello', (req, res) => {
-    res.send('world');
+app.get('/', (req, res) => {
+    res.send('Hello World 👋 🌎');
 })
 
 const texmlController = require('./controllers/texmlController');
