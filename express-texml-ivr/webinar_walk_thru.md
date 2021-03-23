@@ -10,6 +10,16 @@
 * Record a voicemail
   * Upload to Amazon (or something similar)
 
+## Setup Dev Environment
+
+```
+npm init
+npm install dotenv
+npm install express
+npm install telnyx
+npm install xml-formatter
+```
+
 ## Index.js
 
 Start out with a basic express application.
