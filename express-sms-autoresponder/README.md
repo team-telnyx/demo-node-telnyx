@@ -31,7 +31,7 @@ The full documentation and tutorial is available on [developers.telnyx.com](http
 
 ## Setup Reverse Proxy to Localhost
 
-- For your localhost app to receive webhooks from Telnyx, we recommend the use of [ngrok](https://ngrok.com/)
+For your localhost app to receive webhooks from Telnyx, we recommend the use of [ngrok](https://ngrok.com/):
 - Sign up for a free account and follow the ngrok 'Setup & Installation' guide. When running the `ngrok` tool, be sure to change the port value from `80` to `5000` (the port our app is listening on).
 - Once the `ngrok` process is running on your localhost, copy the forwarding https address (e.g., https://4f7e5039ecb9.ngrok.io)
 - On your [Telnyx Messaging Profile](https://portal.telnyx.com/#/app/messaging), update the Inbound Settings to "Send a webhook to this URL" with the copied forwarding url and append the defined webhooks path (e.g., https://4f7e5039ecb9.ngrok.io/webhooks)
