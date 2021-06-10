@@ -26,7 +26,7 @@ The full documentation and tutorial is available on [developers.telnyx.com](http
 
 - Clone this repository and change directory to this project folder
 - Run `npm install`
-- Run `cp .env.sample .env` and proceed to record the purchased sms number as well as the [Telynx API Key](https://portal.telnyx.com/#/app/api-keys) in the `.env` file
+- Run `cp .env.sample .env` and record the [Telynx API Key](https://portal.telnyx.com/#/app/api-keys) in the `.env` file
 - Start the server `node index.js`
 
 ## Setup Reverse Proxy to Localhost

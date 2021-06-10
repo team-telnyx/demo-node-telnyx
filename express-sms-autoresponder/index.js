@@ -1,5 +1,4 @@
 require('dotenv').config();
-const telnyxSMSNumber = process.env.TELNYX_SMS_NUMBER;
 const telnyxApiKey = process.env.TELNYX_API_KEY;
 const telnyx = require('telnyx')(telnyxApiKey);
 
@@ -22,6 +21,7 @@ const processWebhook = (webhookBody) => {
   if (eventType === 'message.received' && direction === 'inbound') {
     const smsMessage = payload['text'].replace(/\s+/g, ' ').trim().toLowerCase();
     const replyToTN = payload['from']['phone_number'];
+    const telnyxSMSNumber = payload['to'][0]['phone_number'];
     const preparedReply = preparedReplies.get(smsMessage) || defaultReply;
 
     return telnyx.messages.create({
@@ -34,6 +34,7 @@ const processWebhook = (webhookBody) => {
 
 app.post('/webhooks', async (req, res) => {
   try {
+    console.log(req.body);
     const result = await processWebhook(req.body);
     console.log(result);
   } catch (e) {
