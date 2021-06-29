@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Telnyx WebRTC Call Demo</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Cross Browser WebRTC Adapter -->
+    <script
+      type="text/javascript"
+      src="https://webrtc.github.io/adapter/adapter-latest.js"
+    ></script>
+
+    <!-- Include the Telnyx WEBRTC JS SDK -->
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/@telnyx/webrtc"
+    ></script>
+
+    <!-- To style up the demo a little -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="shortcut icon" href="./favicon.ico" />
+  </head>
+  <style>
+    h5 {
+      color: #000000;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div id="logos" class="row pt-5 container-title">
+        <!-- <h1>Telnyx JavaScript WebRTC Call Demo</h1> -->
+        <img src="./logo_telnyx.svg" class="telnyx_logo" />
+        <img src="./webrtc_logo.png" class="webrtc_logo" />
+      </div>
+      <div class="row pt-5">
+        <div id="credentials" class="row w-100 utils-margin-top-bg">
+          <div class="col-md-6 col-xs-12">
+            <div class="card">
+              <div class="card-body">
+                <h5>Connect</h5>
+                <div class="form-group">
+                  <label class="telnyx-labels" for="username">Username</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="username"
+                    placeholder="Enter your username"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="telnyx-labels" for="password">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="Enter your password"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                </div>
+                <button
+                  id="btnConnect"
+                  class="btn btn-block btn-success"
+                  style="margin-top: 20px;"
+                  onclick="connect()"
+                >
+                  Connect
+                </button>
+                <button
+                  id="btnDisconnect"
+                  class="btn btn-block btn-danger d-none"
+                  onclick="disconnect()"
+                >
+                  Disconnect
+                </button>
+
+                <div class="text-center mt-3 text-muted">
+                  <small
+                    >Status:
+                    <span id="connectStatus">Not Connected</span></small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xs-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="telnyx-labels" for="calleeNumber">Call To:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="calleeNumber"
+                    placeholder="Enter SIP or Number to Dial"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                  <label class="telnyx-labels" for="callerNumber">Call From:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="callerNumber"
+                    placeholder="Enter Caller-Id"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                </div>
+                <div class="col-12 col-md-8 mt-4 mt-md-1">
+                  <button
+                    id="startCall"
+                    class="btn btn-primary px-5 mt-4"
+                    onClick="makeCall()"
+                    disabled="true"
+                  >
+                    Call
+                  </button>
+                  <button
+                    id="hangupCall"
+                    class="btn btn-danger px-5 mt-4 d-none"
+                    onClick="hangup()"
+                    disabled="true"
+                  >
+                    Hang up
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row pt-5">
+        <div id="texml" class="row w-100 utils-margin-top-bg">
+          <div class="col-md-6 col-xs-12">
+            <div class="card">
+              <div class="card-body">
+                <h5>Greetings</h5>
+                <div class="form-group">
+                  <label class="telnyx-labels" for="outboundGreeting">Outbound Call Greeting</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="outboundGreeting"
+                    placeholder="Greeting for outbound call"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                  <label class="telnyx-labels" for="inboundGreeting">Inbound Call Greeting</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inboundGreeting"
+                    placeholder="Greeting for outbound call"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                </div>
+                <button
+                  id="btnSetGreeting"
+                  class="btn btn-block btn-success"
+                  style="margin-top: 20px;"
+                  onclick="setGreetings()"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xs-12">
+            <div class="card">
+              <div class="card-body">
+              <h5>Messaging</h5>
+                <div class="form-group">
+                  <label class="telnyx-labels" for="messageToPhoneNumber">Send Message To:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="messageToPhoneNumber"
+                    placeholder="Number to Text"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                  <label class="telnyx-labels" for="messageFromPhoneNumber">Send Message From:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="messageFromPhoneNumber"
+                    placeholder="Number to Text From"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                  <label class="telnyx-labels" for="messageText">Message Text:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="messageText"
+                    placeholder="Message Contents"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                </div>
+                  <label class="telnyx-labels" for="messageMedia">Media Url:</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="messageMedia"
+                    placeholder="Media Url"
+                    onchange="saveInLocalStorage(event)"
+                  />
+                </div>
+                <button
+                  id="btnSendMessage"
+                  class="btn btn-block btn-success"
+                  style="margin-top: 20px;"
+                  onclick="sendMessage()"
+                >
+                  Send Message
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <audio
+      id="remoteAudio"
+      autoplay="true"
+      playsinline="true"
+    ></audio>
+    </div>
+    <script type="text/javascript" src="js/telnyx.js">
+    </script>
+  </body>
+</html>

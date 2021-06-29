@@ -1,0 +1,23 @@
+{
+  "name": "express-webrtc-admin",
+  "version": "1.0.0",
+  "description": "Create Telephony Creds and Mint JSON Web Tokens",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "debug": "nodemon index",
+    "playground": "node playground.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dan Tolbert",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.0",
+    "nodemon": "^2.0.7",
+    "telnyx": "^1.15.0",
+    "url-join": "^4.0.1"
+  }
+}
