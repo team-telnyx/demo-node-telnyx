@@ -1,0 +1,21 @@
+{
+  "name": "premium-amd-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "debug": "nodemon index.js"
+  },
+  "author": "Dan Tolbert",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.9",
+    "nunjucks": "^3.2.3",
+    "phone": "^2.4.22",
+    "telnyx": "^1.15.0"
+  }
+}

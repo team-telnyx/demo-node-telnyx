@@ -1,0 +1,22 @@
+{
+  "+19842066556" : {
+    "setting": "unknownSilence",
+    "mediaUrl": "https://telnyx-mms-demo.s3.us-east-2.amazonaws.com/voicemails/unknownSilence.wav",
+    "beep": false
+  },
+  "+19842066557"  : {
+    "setting": "humanBusiness",
+    "mediaUrl": "https://telnyx-mms-demo.s3.us-east-2.amazonaws.com/voicemails/humanBusiness.wav",
+    "beep": false
+  },
+  "+19842066558"  : {
+    "setting": "humanVoicemail",
+    "mediaUrl": "https://telnyx-mms-demo.s3.us-east-2.amazonaws.com/voicemails/humanVoicemail.wav",
+    "beep": true
+  },
+  "+19842066559" : {
+    "setting": "humanResidence",
+    "mediaUrl": "https://telnyx-mms-demo.s3.us-east-2.amazonaws.com/voicemails/humanResidence.wav",
+    "beep": false
+  }
+}
