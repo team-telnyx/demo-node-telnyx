@@ -37,14 +37,19 @@ app.post('/outbound', async (request, response) => {
   const to_number = request.body.to_number;
 
   try {
-    const { data: call } = await telnyx.calls.create({ connection_id: process.env.TELNYX_CONNECTION_ID, to: to_number, from: process.env.TELNYX_NUMBER });
+    const { data: call } = await telnyx.calls.create({
+      connection_id: process.env.TELNYX_CONNECTION_ID,
+      to: to_number,
+      from: process.env.TELNYX_NUMBER,
+      timeout_secs: "5"
+    });
     response.render('messagesuccess');
   } catch (e) {
     response.send(e);
   }
 })
 
-app.post('/call_control', async (request, response) => {
+app.post('/call-control/inbound', async (request, response) => {
   response.sendStatus(200);
 
   data = request.body.data;
@@ -63,9 +68,9 @@ app.post('/call_control', async (request, response) => {
         language: 'en-US'
       });
     } else if (data.event_type == 'call.speak.ended') {
-      const call = new telnyx.Call({ call_control_id: data.payload.call_control_id });
+      // const call = new telnyx.Call({ call_control_id: data.payload.call_control_id });
       console.log('Speak has ended.');
-      call.hangup();
+      // call.hangup();
     }
   } catch (error) {
     console.log('Error issuing call command');
@@ -75,5 +80,5 @@ app.post('/call_control', async (request, response) => {
 });
 
 // Fire up the app on port specified in env
-app.listen(process.env.TELNYX_APP_PORT);
-console.log(`Server listening on port ${process.env.TELNYX_APP_PORT}`);
+app.listen(process.env.PORT);
+console.log(`Server listening on port ${process.env.PORT}`);
