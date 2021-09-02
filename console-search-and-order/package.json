@@ -1,0 +1,16 @@
+{
+  "name": "console-search-and-order",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "prompts": "^2.4.1",
+    "telnyx": "^1.18.0"
+  }
+}
