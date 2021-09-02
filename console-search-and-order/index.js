@@ -156,6 +156,10 @@ const main = async () => {
     const partialNumber = await promptPartialNumber(phoneNumberSearchResult);
     phoneNumberSearchResult = await searchNumbers(numberType, areaCode, partialNumber);
   }
+  if (phoneNumberSearchResult.length === 0) {
+    console.log('No available numbers with that criteria');
+    return;
+  }
   const phoneNumber = await promptSelectNumber(phoneNumberSearchResult);
   const confirmOrderResponse = await promptConfirmOrder(phoneNumber);
   if (!confirmOrderResponse){
