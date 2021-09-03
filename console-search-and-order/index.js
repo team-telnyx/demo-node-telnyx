@@ -10,6 +10,7 @@ const prompts = require('prompts');
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const validatePhoneForE164 = phoneNumber => (/^\+[1-9]\d{10,14}$/).test(phoneNumber);
+const printArray = array => array.forEach(e => console.log(`* ${e}`));
 
 const searchNumbers = async (numberType, areaCode, partialNumber) => {
   try {
@@ -60,15 +61,10 @@ const orderNumber = async phoneNumber => {
   }
 }
 
-const printArray = array => {
-  array.forEach(e => {
-    console.log(`* ${e}`);
-  })
-}
-
 const waitForOrderComplete = async (phoneNumber, attempts = 10) => {
   try {
     attempts = attempts - 1;
+    console.log(`Checking order status, ${attempts} attempts left`);
     const result = await telnyx.phoneNumbers.retrieve(phoneNumber);
     const orderStatus = result.data.status;
     if (orderStatus === PENDING_STATUS && attempts > 0) {
@@ -78,6 +74,16 @@ const waitForOrderComplete = async (phoneNumber, attempts = 10) => {
     return result;
   } catch (e) {
     console.log(`Error checking status of orderId: ${phoneNumber}`);
+    console.log(e);
+  }
+}
+
+const updatePhoneNumber = async (phoneNumberId, updatePayload) => {
+  try {
+    const result = await telnyx.phoneNumbers.update(phoneNumberId, updatePayload);
+    return result;
+  } catch (e) {
+    console.log(`Error updating phone number: ${phoneNumberId}`);
     console.log(e);
   }
 }
@@ -168,7 +174,8 @@ const main = async () => {
   }
   const orderResponse = await orderNumber(phoneNumber);
   const phoneNumberObject = await waitForOrderComplete(phoneNumber);
-  console.log(phoneNumberObject);
+  const updateResponse = await updatePhoneNumber(phoneNumberObject.data.id, {billing_group_id:BILLING_GROUP_ID});
+  console.log(updateResponse);
 }
 
 main();
