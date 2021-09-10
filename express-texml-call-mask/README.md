@@ -111,7 +111,7 @@ At this point you can point your application to generated ngrok URL + path  (Exa
 
 #### Create a database
 
-Edit the [`models/phoneNumberTable.json`](models/models/phoneNumberTable.json) file to `models/database.json` and fill in:
+Edit the [`models/phoneNumberTable.json`](models/phoneNumberTable.json) file to `models/database.json` and fill in:
 
 * Your Cell Phone Number(s)
 * Your Telnyx Phone Number
