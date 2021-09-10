@@ -13,10 +13,6 @@ const dtmfDialController = require('./controllers/dtmfDialController');
 const dtmfDialPath = '/dtmfDial';
 app.use(dtmfDialPath, express.urlencoded({ extended: true }), dtmfDialController);
 
-const didDialController = require('./controllers/didDialController');
-const didDialPath = '/didDial';
-app.use(didDialPath, express.urlencoded({ extended: true }), didDialController);
-
 const port = process.env.PORT || 3000;
 http.listen(port);
 console.log(`Server listening on port: ${port}`);

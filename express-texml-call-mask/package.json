@@ -4,7 +4,8 @@
   "description": "creates a proxy number to route calls on demand with smart cacheing",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "author": "Dan Tolbert",
   "license": "MIT",
@@ -13,6 +14,7 @@
     "express": "^4.17.1",
     "node-cron": "^3.0.0",
     "telnyx": "^1.18.0",
-    "twilio": "^3.67.2"
+    "twilio": "^3.67.2",
+    "uuid": "^8.3.2"
   }
 }

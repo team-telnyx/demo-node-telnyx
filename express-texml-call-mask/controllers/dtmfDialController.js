@@ -8,7 +8,7 @@ const hangupSentence = 'Thank you for the call, hanging up';
 const inboundPSTNAnswerController = async (req, res) => {
   const defaultGatherSentence = 'Hello, please enter the phone number with country code you would like to dial followed by the pound sign';
   const event = req.body;
-  db.saveLiveCall(event);
+  console.log(event);
   const response = new VoiceResponse();
   const gather = response.gather({
       action: 'gather',
@@ -26,38 +26,45 @@ const inboundPSTNAnswerController = async (req, res) => {
 
 const gatherController = async (req, res) => {
   const event = req.body;
+  console.log(event);
   const phoneNumber = event.Digits;
   const userRecord = db.lookupUserByPSTNPhoneNumber(event.From);
+
+  // Connect inbound caller to conf
+  // Create outbound dial to desired PSTN number
+  // when that call answers, add to conf
+  // save conf-id
+  // every {duration} play audio to conf-id
+
   const response = new VoiceResponse();
   response.dial({
     callerId: `${userRecord.telnyxPhoneNumber}`,
     record: 'record-from-answer-dual',
-    recordingStatusCallback: 'recordStatus'
+    recordingStatusCallback: 'recordStatus',
+    action: 'dialFinished',
+    method: 'POST'
   }, `+${phoneNumber}`);
   res.type("application/xml");
   res.send(response.toString());
 };
 
 const recordFinishedController = async (req, res) => {
-  console.log(req.body);
   const event = req.body;
+  console.log(event);
   res.type("application/xml");
   res.send(texml.hangupTeXML(hangupSentence));
 };
 
 const recordStatusController = async (req, res) => {
-  console.log(req.body);
   const event = req.body;
+  console.log(event);
   res.sendStatus(200);
 };
 
 const dialFinishedController = async (req, res) => {
-  console.log(req.body);
   const event = req.body;
-  res.type("application/xml");
-  const response = new VoiceResponse();
-  response.hangup();
-  res.send(response.toString());
+  console.log(event);
+  res.sendStatus(200);
 };
 
 router.route('/inbound')
