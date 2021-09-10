@@ -1,10 +1,10 @@
 <div align="center">
 
-# Telnyx-Node TeXML & IVR Demo
+# Telnyx-Node TeXML & Masked-Calling Demo
 
 ![Telnyx](../logo-dark.png)
 
-Sample application demonstrating Telnyx-Node IVR with TeXML
+Sample application demonstrating Telnyx-Node Call Mask with TeXML
 
 </div>
 
@@ -12,9 +12,9 @@ Sample application demonstrating Telnyx-Node IVR with TeXML
 
 The full documentation and tutorial is available on [developers.telnyx.com](https://developers.telnyx.com/docs/v2/development/dev-env-setup?lang=node&utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
 
-## Video Walk Through
+## Diagram
 
-**To be filled after Webinar**
+![dtmfDial.png](./dtmfDial.png)
 
 ## Pre-Reqs
 
@@ -24,23 +24,15 @@ You will need to set up:
 * [Telnyx Phone Number](https://portal.telnyx.com/#/app/numbers/my-numbers?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) enabled with:
 * [Telnyx TeXML Application](https://developers.telnyx.com/docs/v2/call-control/texml-setup)
 * [Telnyx Outbound Voice Profile](https://portal.telnyx.com/#/app/outbound-profiles?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
-* [Telnyx SIP Connection (Credentials)](https://portal.telnyx.com/#/app/connections)
 * Ability to receive webhooks (with something like [ngrok](https://developers.telnyx.com/docs/v2/development/ngrok?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link))
 * [Node & NPM](https://developers.telnyx.com/docs/v2/development/dev-env-setup?lang=node&utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) installed
 
 
 ## What you can do
 
-* Create a custom greeting
-* Receive a Call
-
-## Covered in Webinar
-
-* How to buy a phone number
-* How to register two different SIP users on your phone number (using Zoiper & the Telnyx WebRTC demo app)
-* How to answer an incoming call and play custom text-to-speech
-* How to prompt for and collect user button presses, and route calls based on those inputs
-* How to use a custom audio file instead of text-to-speech
+* Call into your Telnyx Number
+* Enter digits of the desired number to call
+* Be forwarded to that number
 
 ## Usage
 
@@ -70,7 +62,7 @@ TELNYX_CONNECTION_ID=1494404757140276705
 
 | Callback Type                         | URL                                                                   |
 |:--------------------------------------|:----------------------------------------------------------------------|
-| Inbound Call-Control Status Callback  | `{ngrok-url}/texml/inbound`                                           |
+| Inbound Call-Control Status Callback  | `{ngrok-url}/dtmfDial/inbound`                                           |
 
 ### Install
 
@@ -78,6 +70,8 @@ Run the following commands to get started
 
 ```
 $ git clone https://github.com/team-telnyx/demo-node-telnyx.git
+$ cd demo-node-telnyx/express-texml-call-mask
+$ npm install
 ```
 
 ### Notes!
@@ -117,11 +111,9 @@ At this point you can point your application to generated ngrok URL + path  (Exa
 
 #### Create a database
 
-Copy the [`models/database.json.sample`](models/database.json.sample) file to `models/database.json` and fill in:
+Edit the [`models/phoneNumberTable.json`](models/models/phoneNumberTable.json) file to `models/database.json` and fill in:
 
 * Your Cell Phone Number(s)
-* Your Telnyx SIP Endpoint(s)
-* Voicemail greeting URL
 * Your Telnyx Phone Number
 
 #### Start the Server
