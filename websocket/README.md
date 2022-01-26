@@ -42,6 +42,7 @@ The following environmental variables need to be set
 | `TELNYX_APP_PORT`      | **Defaults to `8000`** The port the app will be served                                                                                                   |
 | `BASE_URL`             | Your **NGROK DOMAIN** like `"http://your-url.ngrok.io"`                                                                                                  |
 | `TELNYX_CONNECTION_ID` | The ID of the [call-control-connection](https://portal.telnyx.com/#/app/call-control/applications) to use for placing the calls                          |
+| `GOOGLE_APPLICATION_CREDENTIALS` | The path to your google applications file |
 
 ### .env file
 
@@ -50,11 +51,13 @@ This app uses the excellent [dotenv](https://github.com/motdotla/dotenv) package
 Make a copy of [`.env.sample`](./.env.sample) and save as `.env` and update the variables to match your creds.
 
 ```
-TELNYX_PUBLIC_KEY="KEYasdf"
-TELNYX_API_KEY="+kWXUag92mcU="
+TELNYX_PUBLIC_KEY=abc12
+TELNYX_API_KEY=31dbac
 TELNYX_APP_PORT=8000
-TELNYX_CONNECTION_ID=1494404757140276705
-BASE_URL="http://your-url.ngrok.io"
+BASE_URL=https://telnyx-demo.ngrok.io
+TELNYX_CONNECTION_ID=230598230952
+PORT=8000
+GOOGLE_APPLICATION_CREDENTIALS=/Path/to/.google-cloud/speech2text-creds.json
 ```
 
 ### Callback URLs For Telnyx Applications
