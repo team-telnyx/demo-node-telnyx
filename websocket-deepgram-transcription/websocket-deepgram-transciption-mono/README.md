@@ -2,7 +2,7 @@
 
 # Telnyx-Node Deepgram Transcription Demo
 
-![Telnyx](../logo-dark.png)
+![Telnyx](../../logo-dark.png)
 
 Sample application demonstrating Telnyx-Node Deepgram Transcription
 
