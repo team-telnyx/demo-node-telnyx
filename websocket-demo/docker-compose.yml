@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    ports:
+      - 3000:3000
+    volumes:
+      - /app/node_modules
+      - .:/app
+    tty: true
+    command: ./docker-entrypoint.sh
+   
+      
