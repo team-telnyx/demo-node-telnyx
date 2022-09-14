@@ -3,6 +3,8 @@
 This code is an example to present how to use 2-way websocket interface available in Telnyx Voice API - [see details here](https://developers.telnyx.com/docs/api/v2/call-control/Call-Commands#callStreamingStart).
 Application is transcribing a voice call online using a selected speech engine provider. You can choose between Amazon, Google and Microsoft based on your preferences or language coverage. Application is converting speech to text and playing back a transcribed text with a chosen TTS voice.
 
+![plot](./images/app.png)
+
 ## Installation & Configuration
 
 ### Telnyx Account
