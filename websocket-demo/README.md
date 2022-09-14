@@ -130,7 +130,14 @@ docker-compose up -d
 
 ## Other options
 
-You can also test voice to text transcription using your computer microphone. Please check the file record.js which is using Google Cloud. You need to install SOX library to use this app. Run this app with a following command:
+You can also test voice to text transcription using your computer microphone. Please check the file record.js which is using Google Cloud.
+You need to install SOX library to use this app:
+
+```
+brew install sox
+```
+
+Run this app with a following command:
 
 ```
 npm run record
