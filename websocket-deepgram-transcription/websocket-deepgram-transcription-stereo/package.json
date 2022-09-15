@@ -1,11 +1,11 @@
 {
   "name": "deepgram-integration",
   "version": "1.0.0",
-  "description": "Testing integrating deepgram with telnyx streaming audio",
-  "main": "deepgram-node.js",
+  "description": "Testing integrating deepgram with telnyx streaming audio for both inbound and outbound tracks",
+  "main": "deepgram-node-stereo.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node deepgram-node-mono.js"
+    "start": "node deepgram-node-stereo.js"
   },
   "author": "Dylan Chopra",
   "license": "ISC",
@@ -15,7 +15,7 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "net": "^1.0.2",
-    "telnyx": "^1.23.0",
+    "socket.io": "^4.5.1",
     "wavefile": "^11.0.0",
     "websocket": "^1.0.34",
     "ws": "^8.5.0"

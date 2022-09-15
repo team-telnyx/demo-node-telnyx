@@ -1,10 +1,10 @@
 <div align="center">
 
-# Telnyx-Node Deepgram Transcription Demo
+# Telnyx-Node Deepgram Stereo Transcription Demo
 
 ![Telnyx](../../logo-dark.png)
 
-Sample application demonstrating Telnyx-Node Deepgram Transcription
+Sample application demonstrating Telnyx-Node Deepgram Stereo (Multi-Channel) Transcription
 
 </div>
 
@@ -23,8 +23,8 @@ You will need to set up:
 
 ## What you can do
 
-* Create an outbound call to your phone number (when running the app or using postman) with the stream url pointing to your application
-* If you answer, your single-channel audio will be transcribed to the console
+* Place a call to your Telnyx phone number configured to a TexML application, the call will be transferred to the specified end number while streaming the audio to your Node application
+* If the end number answers the call, audio will be transcribed to the console, separated by the channel that the audio comes in on
 
 ## Usage
 
@@ -32,47 +32,34 @@ The following environmental variables need to be set
 
 | Variable               | Description                                                                                                                                              |
 |:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `TELNYX_API_KEY`       | Your [Telnyx API Key](https://portal.telnyx.com/#/app/api-keys)                                                                                          |
 | `DEEPGRAM_API_KEY`     | Your [Deepgram API Key](https://console.deepgram.com/signup?jump=keys)                                                                                   |
 | `HOST_PORT`            | **Defaults to `9000`** The port the app will be served                                                                                                   |
-| `CONNECTION_ID`        | The ID of the [call-control-connection](https://portal.telnyx.com/#/app/call-control/applications) to use for placing the calls                          |
-| `TO_NUMBER`            | The number to place your outbound call to                                                                                                                |
-| `FROM_NUMBER`          | A Telnyx number to place your call from                                                                                                                  |
-| `SOCKET_URL`           | Your **NGROK DOMAIN** like `"ws://your-url.ngrok.io"`                                                                                                    |
 
-### Call Control Application
+### TeXML Application
 
-In the [Mission Control Portal](https://portal.telnyx.com/) you will need to create a Call Control Application. This can be done by navigating to the `Call Control` tab in the portal and clicking `Add New App`.
+In the [Mission Control Portal](https://portal.telnyx.com/) you will need to create a TeXML Call Control Application. This can be done by navigating to the `Call Control` tab in the portal and then going to the `TeXML Bin` sub-tab.
 
-You can specify the name for the application, but no specific webhook addresses need to be set up for this application to work. Instead you can use a webhook capturing service such as
-[HookBin](https://hookbin.com/) to simply see the webhook events as they come in. 
-
-After creating the application, you can click on it to view the `Connection ID` which you will input into your `.env` file.
-
-### .env file
-
-This app uses the excellent [dotenv](https://github.com/motdotla/dotenv) package to manage environment variables.
-
-Make a copy of [`.env.sample`](./.env.sample) and save as `.env` and update the variables to match your creds.
+You can specify the name for the application, and it will automatically generate a URL. Then you can paste in this XML in the box labeled `Content`:
 
 ```
-TELNYX_API_KEY=KEYasdf
-DEEPGRAM_API_KEY=xxxx
-HOST_PORT=9000
-CONNECTION_ID=1494404757140276705
-TO_NUMBER=+15552345678
-FROM_NUMBER=+15551234567
-SOCKET_URL=ws://your-url.ngrok.io
-
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Start>
+    <Stream url="wss://yourdomain.com/stream" track="both_tracks" />
+  </Start>
+  <Dial>
+    <Number>YOUR_PHONE_NUMBER</Number>
+  </Dial>
+</Response>
 ```
 
-### Install
+You will need to replace the Stream URL with your ngrok URL, from the next steps. Additionally, you will need to populate a value for YOUR_PHONE_NUMBER that the call will be forwarded to.
 
-Run the following commands to get started
+Before saving the new TexML Bin, be sure to copy the value populated in `URL`, as it will be needed to set up your TeXML Application.
 
-```
-$ git clone https://github.com/team-telnyx/demo-node-telnyx.git
-```
+After saving the TexML Bin, you will need to create a new TexML Application. You first navigate to the `TeXML Application` sub-tab, and click `Add new TeXML App`. From here you will give your application a name, and paste in your TexML Bin URL in the field labeled `Send a TeXML webhook to the URL`. Lastly you need to configure an Outbound Voice Profile in the Outbound Settings. The steps for creating an outbound voice profile can be found [here](https://developers.telnyx.com/docs/v2/call-control/quickstart#step-3-create-an-outbound-voice-profile). No other settings need to be modified, and you can save your TeXML Application.
+
+Once you have created and saved your TeXML Application, it needs to be assigned to a number, which can be done by navigating to the `Numbers` tab and selecting your application from the dropdown for `Connection or App`.
 
 ### Ngrok
 
@@ -99,27 +86,27 @@ Connections                   ttl     opn     rt1     rt5     p50     p90
                               0       0       0.00    0.00    0.00    0.00
 ```
 
+### .env file
+
+This app uses the excellent [dotenv](https://github.com/motdotla/dotenv) package to manage environment variables.
+
+Make a copy of [`.env.sample`](./.env.sample) and save as `.env` and update the variables to match your creds.
+
+```
+DEEPGRAM_API_KEY=xxxx
+HOST_PORT=9000
+
+```
+
 ### Run
 
 After setting up `ngrok` or another tunneling service, you will need to copy the Forwarding URL and paste it into your `.env` file. You will also need to ensure the prefix before the URL is `ws` or `wss`, rather than `http` or `https`. It should look something like: `"ws://your-url.ngrok.io"`.
 
-Start the server `npm run start`
+Start the transcription server `npm run start`
 
-This will automatically place an outbound call to your specified TO_NUMBER. Upon answering you should receive transcription of that channel's audio to the console.
+#### Create and bridge the calls
 
-#### Create calls using Curl
+To begin transcription, place a call using a mobile phone or the Telnyx `Web Dialer` to your Telnyx number. This call should not be placed from the same number as the number you set in your TeXML Bin. Once this call is received, it should transfer to your forwarding number and begin streaming the audio to your application. This audio will be seen in the developers console, separated by the Speaker.
 
-The service exposes a path at `ws://your-url.ngrok.io/calls` to accept an audio stream to a websocket. After initially running the application and hanging up the call, you can either stop (`Ctrl+C`) and restart the program with the same command (`npm run start`) or place a new dial request. 
-
-```bash
-curl --location --request POST 'https://api.telnyx.com/v2/calls' \
---header 'Authorization: Bearer KEYxxxx' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "to":"+15552345678",
-    "from":"+15551234567",
-    "connection_id":"1494404757140276705",
-    "stream_url":"ws://your-url.ngrok.io"
-}'
-```
+The service exposes a path at `ws://your-url.ngrok.io/calls` to accept an audio stream to a websocket. After initially running the application, you can either stop (`Ctrl+C`) and restart the program with the same command (`npm run start`) or place a new call. 
 
