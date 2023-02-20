@@ -93,7 +93,7 @@ Copy `example.env` to `.env` and configure the following settings:
 2. Clone the application from a GitHub repossitory
 
 ```
-git clone https://github.com/leszek-telnyx/telnyx-websocket-demo.git
+git clone https://github.com/team-telnyx/demo-node-telnyx.git
 ```
 
 3. Go to a cloned app directory and install the modules
