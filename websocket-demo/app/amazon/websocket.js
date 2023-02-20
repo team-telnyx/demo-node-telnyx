@@ -1,59 +1,40 @@
-const AWS = require("aws-sdk");
-const marshaller = require("@aws-sdk/eventstream-marshaller");
-const util_utf8_node = require("@aws-sdk/util-utf8-node");
-const v4 = require("./aws-signature-v4");
+const {
+  TranscribeStreamingClient,
+  StartStreamTranscriptionCommand,
+} = require("@aws-sdk/client-transcribe-streaming");
+const {
+  PollyClient,
+  SynthesizeSpeechCommand,
+} = require("@aws-sdk/client-polly");
+
+const { Readable, PassThrough } = require("stream");
+const streamToBuffer = require("fast-stream-to-buffer");
+
 const wavefile = require("wavefile");
-const WebSocket = require("ws");
-const crypto = require("crypto");
 const { logOutput } = require("../telnyx/chalk");
 
-AWS.config.credentials = new AWS.Credentials(
-  process.env.AWS_ACCESS_KEY_ID,
-  process.env.AWS_SECRET_ACCESS_KEY
-);
-AWS.config.update({ region: process.env.AWS_REGION });
+const MAX_AUDIO_CHUNK_SIZE = 48000;
 
-const Polly = new AWS.Polly();
+let transcribeClient = new TranscribeStreamingClient({
+  region: process.env.AWS_REGION,
+});
 
-const eventStreamMarshaller = new marshaller.EventStreamMarshaller(
-  util_utf8_node.toUtf8,
-  util_utf8_node.fromUtf8
-);
-let socket = null;
+let pollyClient = new PollyClient({ region: process.env.AWS_REGION });
+
+const audioPayloadStream = new PassThrough();
 
 exports.answerWSAmazon = async (ws, req) => {
   const call_id = req.query.call_id;
 
   logOutput(`Amazon websocket initiated\n`, "#0000FF");
 
-  playTTS(ws, call_id, process.env.WELCOME_PROMPT);
+  await playTTS(ws, call_id, process.env.WELCOME_PROMPT);
 
-  const url = v4.createPresignedURL(
-    "GET",
-    `transcribestreaming.${process.env.AWS_REGION}.amazonaws.com:8443`,
-    "/stream-transcription-websocket",
-    "transcribe",
-    crypto.createHash("sha256").update("", "utf8").digest("hex"),
-    {
-      key: process.env.AWS_ACCESS_KEY_ID,
-      secret: process.env.AWS_SECRET_ACCESS_KEY,
-      protocol: "wss",
-      expires: 15,
-      region: process.env.AWS_REGION,
-      query: `language-code=${process.env.BOT_LANGUAGE}&media-encoding=${process.env.AWS_MEDIA_ENCODING}&sample-rate=${process.env.AWS_SAMPLE_RATE}`,
-    }
-  );
-
-  socket = new WebSocket(url);
-  socket.binaryType = "arraybuffer";
-  wireSocketEvents(socket, ws, call_id);
-
-  ws.on("message", (message) => {
+  ws.on("message", async (message) => {
     const msg = JSON.parse(message);
     switch (msg.event) {
       case "connected":
         logOutput(`Websocket stream connected\n`, "#0000FF");
-
         break;
       case "start":
         logOutput(`Websocket stream started\n`, "#0000FF");
@@ -61,16 +42,19 @@ exports.answerWSAmazon = async (ws, req) => {
           `---------------------------------------------------------------\n`,
           "#FFFF00"
         );
+        await startStreaming(ws, call_id);
         break;
       case "media":
-        const rawPcm = convertToPCM(msg.media.payload);
-        const buf = getAudioEventMessage(rawPcm);
-        const binary = eventStreamMarshaller.marshall(buf);
-        socket.send(binary);
+        const pcmData = convertToPCM(msg.media.payload);
+        audioPayloadStream.write(pcmData);
         break;
       case "stop":
         logOutput(`Websocket stream stopped\n`, "#0000FF");
-        socket.close();
+        transcribeClient.destroy();
+        transcribeClient = undefined;
+        pollyClient.destroy();
+        pollyClient = undefined;
+        logOutput(`AWS clients destroyed\n`, "#0000FF");
         break;
       default:
         logOutput(`Other websocket message: ${msg}\n`, "#0000FF");
@@ -92,93 +76,78 @@ const convertToPCM = (payload) => {
   return samples;
 };
 
-const getAudioEventMessage = (buffer) => {
-  return {
-    headers: {
-      ":message-type": {
-        type: "string",
-        value: "event",
-      },
-      ":event-type": {
-        type: "string",
-        value: "AudioEvent",
-      },
-    },
-    body: buffer,
-  };
-};
-
-const wireSocketEvents = async (socket, ws, call_id) => {
-  socket.onmessage = async (message) => {
-    const messageWrapper = eventStreamMarshaller.unmarshall(
-      Buffer.from(message.data)
-    );
-    const messageBody = JSON.parse(
-      String.fromCharCode.apply(String, messageWrapper.body)
-    );
-    if (
-      messageBody &&
-      messageBody.Transcript &&
-      messageBody.Transcript.Results[0]
-    ) {
-      if (messageBody.Transcript.Results[0].IsPartial) {
-        const stdoutText =
-          messageBody.Transcript.Results[0].Alternatives[0].Transcript;
-        if (stdoutText.length > process.stdout.columns - 16) {
-          stdoutText =
-            "..." +
-            stdoutText.substring(
-              stdoutText.length - process.stdout.columns + 16,
-              stdoutText.length
-            );
-        }
-        logOutput(`Recognizing: ${stdoutText}`, "#FF0000");
-      } else {
-        playTTS(
-          ws,
-          call_id,
-          messageBody.Transcript.Results[0].Alternatives[0].Transcript
-        );
-        logOutput(
-          `Recognized: ${messageBody.Transcript.Results[0].Alternatives[0].Transcript}\n`,
-          "#00FF00"
-        );
-        logOutput(
-          `---------------------------------------------------------------\n`,
-          "#FFFF00"
-        );
-      }
-    }
-  };
-
-  socket.onerror = function (err) {
-    console.error("AWS socket error:", err);
-  };
-
-  socket.onclose = function (closeEvent) {
-    logOutput("AWS socket closed\n", "#0000FF");
-  };
-};
-
 const playTTS = async (ws, call_id, text) => {
-  const ttsRequest = {
+  const params = {
+    TextType: "text",
     Text: text,
     OutputFormat: "mp3",
     VoiceId: process.env.AWS_VOICE_NAME,
   };
-  Polly.synthesizeSpeech(ttsRequest, (err, response) => {
-    if (err) {
-      console.log(err.code);
-    } else if (response) {
-      if (response.AudioStream instanceof Buffer) {
-        const data = Buffer.from(response.AudioStream).toString("base64");
-        const dataObj = {
-          event: "media",
-          stream_id: call_id,
-          media: { payload: data },
-        };
-        ws.send(JSON.stringify(dataObj));
+
+  const command = new SynthesizeSpeechCommand(params);
+
+  pollyClient
+    .send(command)
+    .then(async (data) => {
+      if (data.AudioStream instanceof Readable) {
+        streamToBuffer(data.AudioStream, (err, buf) => {
+          if (err) throw err;
+          const string = buf.toString("base64");
+          const dataObj = {
+            event: "media",
+            stream_id: call_id,
+            media: { payload: string },
+          };
+          ws.send(JSON.stringify(dataObj));
+        });
+      } else {
+        console.log("Stream not readable");
+      }
+    })
+    .catch((error) => {
+      console.error("Polly client error", error.message);
+    });
+};
+
+const startStreaming = async (ws, call_id) => {
+  const command = new StartStreamTranscriptionCommand({
+    LanguageCode: process.env.BOT_LANGUAGE,
+    MediaEncoding: process.env.AWS_MEDIA_ENCODING,
+    MediaSampleRateHertz: process.env.AWS_SAMPLE_RATE,
+    AudioStream: audioStream(),
+  });
+
+  try {
+    const data = await transcribeClient.send(command);
+    for await (const event of data.TranscriptResultStream) {
+      for (const result of event.TranscriptEvent.Transcript.Results || []) {
+        if (result.IsPartial === false) {
+          logOutput(
+            `Recognized: ${result.Alternatives[0].Transcript}\n`,
+            "#00FF00"
+          );
+          logOutput(
+            `---------------------------------------------------------------\n`,
+            "#FFFF00"
+          );
+          await playTTS(ws, call_id, result.Alternatives[0].Transcript);
+        } else {
+          logOutput(
+            `Recognizing: ${result.Alternatives[0].Transcript}`,
+            "#FF0000"
+          );
+        }
       }
     }
-  });
+  } catch (error) {
+    console.log("Error:", error.message);
+  }
+};
+
+const audioStream = async function* () {
+  for await (const payloadChunk of audioPayloadStream) {
+    if (payloadChunk.length <= MAX_AUDIO_CHUNK_SIZE) {
+      yield { AudioEvent: { AudioChunk: payloadChunk } };
+    }
+  }
 };
