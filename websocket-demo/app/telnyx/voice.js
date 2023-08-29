@@ -1,10 +1,15 @@
 const axios = require("../axios/axios");
 const { logOutput } = require("./chalk");
+const { transcribeCall, handleTranscription } = require("./transcribe");
 require("dotenv").config();
 const telnyx = require("telnyx")(process.env.TELNYX_API_KEY);
 
 exports.receiveCall = async (body, callback) => {
   const data = body.data;
+
+  const callData = await telnyx.calls.retrieve(data.payload.call_control_id);
+  const isAlive = callData.data.is_alive;
+
   const call = new telnyx.Call({
     call_control_id: data.payload.call_control_id,
   });
@@ -19,42 +24,50 @@ exports.receiveCall = async (body, callback) => {
         `Connecting call leg to websocket: ${data.payload.call_control_id}\n`,
         "#0000FF"
       );
-      let wsUri =
-        process.env.WS_URL +
-        "/" +
-        process.env.BOT_PROVIDER +
-        "?call_id=" +
-        data.payload.call_control_id;
+      if (process.env.BOT_PROVIDER === "telnyx" && isAlive) {
+        transcribeCall(data.payload, process.env.TELNYX_TRANSCRIPTION_ENGINE);
+      } else {
+        let wsUri =
+          process.env.WS_URL +
+          "/" +
+          process.env.BOT_PROVIDER +
+          "?call_id=" +
+          data.payload.call_control_id;
 
-      const apiUrl =
-        process.env.TELNYX_API_URL +
-        "/v2/calls/" +
-        data.payload.call_control_id +
-        "/actions/streaming_start";
-      const config = {
-        url: apiUrl,
-        method: "post",
-        headers: {
-          "Content-type": "application/json",
-          Accept: "application/json",
-          Authorization: "Bearer " + process.env.TELNYX_API_KEY,
-        },
-        data: {
-          stream_track: "inbound_track",
-          stream_url: wsUri,
-        },
-      };
-      try {
-        await axios.sendRequest(config).then((response) => {
-          logOutput(
-            `Stream connect response: ${response.data.data.result}\n`,
-            "#0000FF"
-          );
-        });
-      } catch (error) {
-        console.error(error.response.data.errors);
+        const apiUrl =
+          process.env.TELNYX_API_URL +
+          "/v2/calls/" +
+          data.payload.call_control_id +
+          "/actions/streaming_start";
+        const config = {
+          url: apiUrl,
+          method: "post",
+          headers: {
+            "Content-type": "application/json",
+            Accept: "application/json",
+            Authorization: "Bearer " + process.env.TELNYX_API_KEY,
+          },
+          data: {
+            stream_track: "inbound_track",
+            stream_url: wsUri,
+          },
+        };
+        try {
+          await axios.sendRequest(config).then((response) => {
+            logOutput(
+              `Stream connect response: ${response.data.data.result}\n`,
+              "#0000FF"
+            );
+          });
+        } catch (error) {
+          console.error(error.response.data.errors);
+        }
       }
       break;
+    case "call.transcription":
+      if (isAlive) handleTranscription(data.payload);
+      break;
+
     case "call.bridged":
       logOutput(
         `Call bridged: from ${data.payload.from}, to ${data.payload.to}\n`,
@@ -62,7 +75,10 @@ exports.receiveCall = async (body, callback) => {
       );
       break;
     case "call.hangup":
-      logOutput(`Call hangup: ${data.payload.call_control_id}\n`, "#0000FF");
+      logOutput(
+        `Call disconnected: ${data.payload.call_control_id}\n`,
+        "#0000FF"
+      );
       break;
   }
 
