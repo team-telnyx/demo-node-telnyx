@@ -53,7 +53,7 @@ Copy `example.env` to `.env` and configure the following settings:
 
 **# Bot parameters**
 
-- `BOT_PROVIDER`: name of the speech engine provide, accepted values - "amazon" or "google" or "microsoft"
+- `BOT_PROVIDER`: name of the speech engine provide, accepted values - "telnyx", "amazon" or "google" or "microsoft"
 - `BOT_LANGUAGE`: language to be used for speech to text and text to speech (en-US, de-DE etc.)
 - `WELCOME_PROMPT`: welcome prompt to be played back with TTS at the beginning of the call
 
@@ -61,7 +61,7 @@ Copy `example.env` to `.env` and configure the following settings:
 
 - `TELNYX_API_KEY`: your Telnyx API key visible under your account
 - `TELNYX_API_URL`: Telnyx API URL in your preffered region (api.telnyx.com, api.telnyx.eu etc.)
-- `TELNYX_TRANSCRIPTION_ENGINE`: Telnyx Transcription based on chosen engine (A = Google, B = OpenAI Whisper,)
+- `TELNYX_TRANSCRIPTION_ENGINE`: Telnyx Transcription based on chosen engine (A = Google, B = OpenAI Whisper) - used for BOT_PROVIDER=telnyx
 
 **# Microsoft parameters**
 
