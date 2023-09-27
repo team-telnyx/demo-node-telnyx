@@ -61,7 +61,7 @@ Copy `example.env` to `.env` and configure the following settings:
 
 - `TELNYX_API_KEY`: your Telnyx API key visible under your account
 - `TELNYX_API_URL`: Telnyx API URL in your preffered region (api.telnyx.com, api.telnyx.eu etc.)
-- `TELNYX_TRANSCRIPTION_ENGINE`: Telnyx Transcription based on chosen engine (A = Google, B = OpenAI Whisper) - used for BOT_PROVIDER=telnyx
+- `TELNYX_TRANSCRIPTION_ENGINE`: Telnyx Transcription based on chosen engine (A = Google engine, B = Telnyx engine) - used for BOT_PROVIDER=telnyx
 
 **# Microsoft parameters**
 
