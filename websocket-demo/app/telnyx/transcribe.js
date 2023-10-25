@@ -29,7 +29,7 @@ exports.transcribeCall = async (payload, engine) => {
         const call = new telnyx.Call({
           call_control_id: payload.call_control_id,
         });
-        call.speak({
+        await call.speak({
           payload: process.env.WELCOME_PROMPT,
           voice: "female",
           language: process.env.BOT_LANGUAGE,
@@ -54,7 +54,8 @@ exports.handleTranscription = async (payload) => {
     const call = new telnyx.Call({
       call_control_id: payload.call_control_id,
     });
-    call.speak({
+    if (transcriptionData.transcript !== "") 
+    await call.speak({
       payload: transcriptionData.transcript,
       voice: "female",
       language: process.env.BOT_LANGUAGE,
