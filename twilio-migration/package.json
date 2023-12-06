@@ -1,0 +1,26 @@
+{
+  "name": "twilio-migration",
+  "version": "1.0.0",
+  "description": "Twilio Migration Demo",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --ignore -L index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node.js",
+    "express"
+  ],
+  "author": "Leszek Winiarski",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "chalk": "^4.1.0",
+    "dotenv": "^16.0.2",
+    "express": "^4.17.1",
+    "npm": "^9.5.0",
+    "qs": "^6.11.2",
+    "query-string": "^7.1.1",
+    "telnyx": "^1.25.5"
+  }
+}
