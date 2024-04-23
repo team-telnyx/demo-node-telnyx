@@ -57,11 +57,11 @@ For all details please refer to the Genesys Cloud Open Messaging integration her
 
    <img src="client/public/images/gc_open_messaging_config.png"/>
 
-3. In the Integrations / OAuth menu create a new Code Authorization grant type client and set the required scope - `architect`, `conversations`, `groups`, `notifications`, `outbound`, `response-management`, `routing` and `users`. Note the created `Client ID` and `Client Secret` fields and set it in the server `.env` file.
+3. In the Integrations / OAuth menu create a new Code Authorization grant type client and set the required scope - `architect`, `conversations`, `groups`, `notifications`, `outbound`, `response-management`, `routing` and `users`. In the `Authorized redirect URIs` field provide the URL of your web server serving client app (you can list multiple URLs for your dev, prod environment). Note the created `Client ID` and `Client Secret` fields and set it in the server `.env` file in the parameters `GC_CLIENT_ID` and `GC_CLIENT_SECRET`.
 
    <img src="client/public/images/gc_code_authorization.png"/>
 
-4. In the Integrations / OAuth menu create a new Client Credentials grant type client. Note the created `Client ID` and `Client Secret` and set it in the server `.env` file.
+4. In the Integrations / OAuth menu create a new Client Credentials grant type client. Note the created `Client ID` and `Client Secret` and set it in the server `.env` file in the parameters `GC_CLIENT_CRED_CLIENT_ID` and `GC_CLIENT_CRED_CLIENT_SECRET`.
 
    <img src="client/public/images/gc_client_credentials.png"/>
 
@@ -130,6 +130,14 @@ Comma delimited file to be imported should have the following mandatory format:
 11. In the Architect / Data Tables menu create a table in which a list of numbers or alpha sender IDs will be defined to be available for each of the queues. You can put a name like `TELNYX_SMS_FROM` and provide that name as a value for `REACT_APP_SMS_FROM_TABLE` parameter in the client `.env` file. Table should have 3 mandatory columns: `id`, `queue` and `from`
 
  <img src="client/public/images/gc_data_table.png"/>
+
+12. If you would like to send SMS based on some Genesys Cloud event you can configure the triggers to run Architect Workflow where you can pass the variables available in your trigger's Event Schema like `conversationId`, `participantId`, `mediaType` and more.
+
+  <img src="client/public/images/gc_trigger.png"/>
+
+In the workflow call a previously configured Data Action to send SMS and assign parameters to the required fields from a trigger schema
+
+  <img src="client/public/images/gc_workflow.png"/>
 
 ## Step 5. Set up environment variables
 
