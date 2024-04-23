@@ -9,6 +9,8 @@ This is a sample app preseting integration between Telnyx SMS API and Genesys Cl
 5. Custom app with the iintegration to the Telnyx Number Lookup API to check information about the number.
 6. Run Number Lookup campaign to verify the numbers in the contact list
 
+ <img src="client/public/images/app_sms.png"/>
+
 ---
 
 ## Getting Started
