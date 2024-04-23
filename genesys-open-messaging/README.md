@@ -109,6 +109,26 @@ b) In the Configuration tab provide URL to Telnyx Send SMS POST method `https://
 
  <img src="client/public/images/sms_data_action_2.png"/>
 
+10. In the Outbound / List Managament menu you can import contact lists from comma delimeted files to be used by SMS Campaign app. Name them with a prefix like `SMS_` and set that prefix in your client `.env` file in `REACT_APP_SMS_CONTACT_LISTS_PREFIX` variable.
+    Contact list should have the mandatory columns included where SMS delivery status will be written: `TELNYX_STATUS`,`TELNYX_TIME`,`TELNYX_PRICE`,`TELNYX_MESSAGE_ID` and `TELNYX_MESSAGE`. Sample file format is as below:
+
+| Number      | Name | Title | TELNYX_STATUS | TELNYX_TIME | TELNYX_PRICE | TELNYX_MESSAGE_ID | TELNYX_MESSAGE |
+| ----------- | ---- | ----- | ------------- | ----------- | ------------ | ----------------- | -------------- |
+| +1322456789 | John | Smith |               |             |              |                   |                |
+| +1422345214 | Kate | Brown |               |             |              |                   |                |
+
+For the Number Lookup Campaigns create separate contact list with a prefix like `NL_` and configue that prefix in the client `.env` file in the `REACT_APP_NL_CONTACT_LISTS_PREFIX` variable.
+Comma delimited file to be imported should have the following mandatory format:
+
+| Number      | NationalFormat | CountryCode | MobileCountryCode | MobileNetworkCode | CarrierName | Type | ValidNumber | CallerName |
+| ----------- | -------------- | ----------- | ----------------- | ----------------- | ----------- | ---- | ----------- | ---------- |
+| +1322456789 |                |             |                   |                   |             |      |             |            |
+| +1422345214 |                |             |                   |                   |             |      |             |            |
+
+11. In the Architect / Data Tables menu create a table in which a list of numbers or alpha sender IDs will be defined to be available for each of the queues. You can put a name like `TELNYX_SMS_FROM` and provide that name as a value for `REACT_APP_SMS_FROM_TABLE` parameter in the client `.env` file. Table should have 3 mandatory columns: `id`, `queue` and `from`
+
+ <img src="client/public/images/gc_data_table.png"/>
+
 ## Step 5. Set up environment variables
 
 Create a new copy of `.env.sample` with the name `.env` and set the variables listed in the files both in server and client folders:
