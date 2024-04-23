@@ -131,7 +131,7 @@ Comma delimited file to be imported should have the following mandatory format:
 
  <img src="client/public/images/gc_data_table.png"/>
 
-12. If you would like to send SMS based on some Genesys Cloud event you can configure the triggers to run Architect Workflow where you can pass the variables available in your trigger's Event Schema like `conversationId`, `participantId`, `mediaType` and more.
+12. If you would like to send SMS based on some Genesys Cloud events you can configure the triggers to run Architect Workflow where you can pass the variables available in your trigger's Event Schema like `conversationId`, `participantId`, `mediaType` and more. Here is an example to trigger Send SMS action when an interaction ended in ACD queue.
 
   <img src="client/public/images/gc_trigger.png"/>
 
