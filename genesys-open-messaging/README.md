@@ -49,29 +49,29 @@ For all details please refer to the Genesys Cloud Open Messaging integration her
 1. Logon to GC organization with admin permissions.
    In the Message / Platform Configs menu create a new platform config
 
-   ![](client/public/images/gc_platform_config.png)
+   <img src="client/public/images/gc_platform_config.png" width="50%"/>
 
 2. In the Message / Platforms menu create a new integration for Open Messaging and select platform config created in the previous step. Note the secret token provided there as you will need to set it in the server `.env` file.
 
-   ![](client/public/images/gc_open_messaging_config.png)
+   <img src="client/public/images/gc_open_messaging_config.png"/>
 
 3. In the Integrations / OAuth menu create a new Code Authorization grant type client and set the required scope - `architect`, `conversations`, `groups`, `notifications`, `outbound`, `response-management`, `routing` and `users`. Note the created `Client ID` and `Client Secret` fields and set it in the server `.env` file.
 
-   ![](client/public/images/gc_code_authorization.png)
+   <img src="client/public/images/gc_code_authorization.png"/>
 
 4. In the Integrations / OAuth menu create a new Client Credentials grant type client. Note the created `Client ID` and `Client Secret` and set it in the server `.env` file.
 
-   ![](client/public/images/gc_client_credentials.png)
+   <img src="client/public/images/gc_client_credentials.png"/>
 
 5. In the Integrations add a new Client Application for Telnyx SMS web application. In the Configuration tab provide Application URL pointing to your web server with a path `/auth?state=smsmenu` (e.g `https://yourweb.server.domain.com/auth?state=smsmenu`). To display just SMS tab use `/auth?states=sms`, for SMS Campaign tab use `/auth?state=smscampaign`
 
-   ![](client/public/images/sms_client_application.png)
+   <img src="client/public/images/sms_client_application.png"/>
 
 6. Repeat point 5 for Number Lookup application but use a different path `/auth?state=nlmenu`. To display just Number Lookup tab use `/auth?states=nl`, for NL Campaign tab use `/auth?state=nlcampaign`
 
 7. In the Integrations menu create a new widget application to be available when handling voice calls. In the Configuration tab provide URL to your web server with the path `/auth?state=sms` (e.g. `https://your_web_server/auth?state=sms`)
 
-   ![](client/public/images/sms_widget_application.png)
+   <img src="client/public/images/sms_widget_application.png"/>
 
 In the Advanced tab provide the following JSON object:
 
@@ -97,17 +97,17 @@ In the Advanced tab provide the following JSON object:
 
 8. In Genesys Cloud Architect create a new Inbound Message Flow to route incoming SMSs to your queue
 
-![](client/public/images/gc_architect.png)
+ <img src="client/public/images/gc_architect.png"/>
 
 9. If you would like to send SMS from Genesys Cloud Architect or Scripter tool you can configure Web Services Data Action for Telnyx SMS API Send Message method as documented here - https://developers.telnyx.com/api/messaging/send-message
 
-In the Contracts section create a JSON object with 4 required parameteres - `from`, `to`, `messaging_profile_id` and `text`
+a) In the Contracts section create a JSON object with 4 required parameteres - `from`, `to`, `messaging_profile_id` and `text`
 
-![](client/public/images/sms_data_action_1.png)
+ <img src="client/public/images/sms_data_action_1.png"/>
 
-In the Configuration tab provide URL to Telnyx Send SMS POST method `https://api.telnyx.com/v2/messages` and configure `Authorization` header with your API key `Bearer KEY....`
+b) In the Configuration tab provide URL to Telnyx Send SMS POST method `https://api.telnyx.com/v2/messages` and configure `Authorization` header with your API key `Bearer KEY....`
 
-![](client/public/images/sms_data_action_2.png)
+ <img src="client/public/images/sms_data_action_2.png"/>
 
 ## Step 5. Set up environment variables
 
@@ -170,10 +170,10 @@ After you have cloned this repo:
 
 Run the commands
 
-1 - `yarn install` to install the dependencies in a server folder
+1 - `yarn install` to install the dependencies in the server and client folders
 
-2 - `yarn start` will initialize the backend server.
+2 - `yarn start` will initialize the backend and frontend applications.
 
 ## Step 7: Implement the app as a docker container
 
-If you would like to deploy the app to your Docker infrastructure you can run `docker compose up --build -d` from a main folder.
+If you would like to deploy the app to your Docker infrastructure you can run `docker compose up --build -d` from a main folder. In case you would like to change configuration of your Docker containers you can edit `docker-compose.yml` file.
