@@ -1,0 +1,90 @@
+$-sm-screen-width: 250px;
+$light-silver: #91979f;
+
+@mixin overflow-scrolling {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'header'
+    'content';
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  overflow: hidden;
+
+  // TODO: Better responsive styles
+  @media only screen and (min-width: $-sm-screen-width) {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'header header'
+      'sideNav content';
+  }
+}
+
+.header {
+  grid-area: header;
+}
+
+.sideNav {
+  grid-area: sideNav;
+
+  @include overflow-scrolling;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  bottom: 0;
+  background-color: #1D2241;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 2;
+
+  // TODO: Better responsive styles
+  @media only screen and (min-width: $-sm-screen-width) {
+    position: relative;
+    top: 0;
+  }
+}
+
+.content {
+  grid-area: content;
+  margin: 20px;
+
+  @include overflow-scrolling;
+}
+
+.footer {
+  a {
+    color: $light-silver !important;
+  }
+}
+
+.pagesSearchBar,
+.logoLink {
+  display: none;
+
+  // TODO: Better responsive styles
+  @media only screen and (min-width: $-sm-screen-width) {
+    display: block;
+  }
+}
+
+.progress {
+  position: absolute !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0 !important;
+
+  & :global(.bar) {
+    border-radius: 0 !important;
+    min-width: 0 !important;
+  }
+}

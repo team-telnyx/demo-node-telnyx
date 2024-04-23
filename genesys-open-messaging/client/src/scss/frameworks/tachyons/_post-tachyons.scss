@@ -1,0 +1,14 @@
+/**
+ * Tachyons styles to override should go here.
+ *
+ * TODO: Configure Webpack to repmove duplicate styles
+ */
+
+// Inspired by `.lh-solid`
+.lh-tight {
+  line-height: .8;
+}
+
+code, .code {
+  font-size: .8em; // Decrease font size
+}

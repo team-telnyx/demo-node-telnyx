@@ -1,0 +1,64 @@
+$DateInput__openDown--top: 48px;
+$DateRangePickerInput--border-radius: .285rem;
+
+.DateRangePickerInput {
+  border-color: rgba(34,36,38,.15); // Match SUI border color
+  border-radius: $DateRangePickerInput--border-radius;
+}
+
+.DateInput,
+.DateInput_input {
+  // Only do border-top radius, since bottom is outlined
+  border-top-left-radius: $DateRangePickerInput--border-radius;
+  border-top-right-radius: $DateRangePickerInput--border-radius;
+  font-size: 1em;
+}
+
+.DateInput {
+  width: 7em;
+}
+
+.DateInput__openDown {
+  &:before {
+    top: $DateInput__openDown--top - 11;
+  }
+
+  &:after {
+    top: $DateInput__openDown--top - 10;
+  }
+}
+
+.DateInput_input {
+  padding: .8em .4em .4em;
+}
+
+.DateRangePickerInput_calendarIcon {
+  margin: 0 .4em;
+  padding: .4em;
+}
+
+.DateRangePickerInput_arrow_svg {
+  $wh: 18px;
+
+  width: $wh;
+  height: $wh;
+}
+
+.DateRangePicker_picker__openDown {
+  top: $DateInput__openDown--top;
+}
+
+.DayPicker_weekHeader {
+  top: 55px;
+}
+
+.CalendarMonth_caption {
+  strong {
+    font-weight: normal;
+    @extend .Canela-Regular-Web;
+  }
+}
+
+.DayPickerNavigation_button__horizontal {
+  top: 16px; // Match 8px base
+}

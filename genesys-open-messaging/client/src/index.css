@@ -1,0 +1,67 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+#telnyx-logo {
+  animation: fadeInOut 1.5s ease infinite;
+  color: #00e3aa;
+  width: 90%;
+  height: 90%;
+}
+/* -------------- Loader -------------- */
+.loader {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  text-rendering: optimizeLegibility;
+  display: grid;
+  place-items: center;
+}
+.loader_circle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 50%;
+  border-top: 3px solid #242846;
+  animation: spin 1.5s infinite;
+}
+.loader_text {
+  font-size: 0.7rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+@keyframes fadeInOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

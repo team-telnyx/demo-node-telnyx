@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Telnyx Demo Portal</title>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="version" content="<%= htmlWebpackPlugin.options.version %>" />
+    <link
+      async
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui@2/dist/semantic.min.css"
+    />
+    <base href="/" />
+  </head>
+
+  <body class="relative ma0 pa0">
+    <div id="root">
+      <style>
+        body {
+          position: relative;
+          padding: 0;
+          margin: 0;
+          background-color: #242846;
+          /* .bg-navy */
+          color: #fcfcfc;
+          /* .white */
+          font-family: Lato, "Helvetica Neue", Arial, Helvetica, sans-serif;
+          font-weight: 300;
+        }
+
+        aside {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100vw;
+          height: 100vh;
+        }
+
+        aside p {
+          font-size: 24px;
+        }
+
+        .fadeInOut {
+          animation: fadeInOut 2s infinite;
+        }
+
+        @keyframes fadeInOut {
+          0% {
+            opacity: 0.99;
+          }
+
+          50% {
+            opacity: 0.33;
+          }
+
+          100% {
+            opacity: 0.99;
+          }
+        }
+      </style>
+
+      <aside>
+        <p class="fadeInOut">Loading...</p>
+      </aside>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+    <script>
+      WebFont.load({
+        google: {
+          families: ["Lato:300,400,700,900,400italic"],
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,4 @@
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+  word-break: normal !important; // Override `break-all`
+}

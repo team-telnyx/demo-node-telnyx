@@ -1,0 +1,11 @@
+$dark-gray: #353b3b;
+
+body {
+  color: $dark-gray;
+  background-color: $white;
+}
+
+#root {
+  // HACK: Override font-family set by Ant Design on body
+  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}

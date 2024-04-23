@@ -1,0 +1,208 @@
+/**
+ * Semantic UI styles to override should go here.
+ *
+ * TODO: Configure Webpack to repmove duplicate styles
+ */
+
+$color-map: (
+  red:    #e23f3f,
+  orange: #ff7070,
+  yellow: #ffce54,
+  // olive:  $olive,
+  green:  #00c08b,
+  teal:   #20bff0,
+  blue:   #0681e0,
+  // violet: $violet,
+  purple: #5e2ca5,
+  pink:   #ff80cc,
+  // brown:  $brown,
+  grey:   #c0cbd4,
+  black:  #0b141c,
+);
+
+.ui {
+  &.inverted {
+    @include font-smoothing;
+
+    &.segment,
+    &.menu {
+      // &,
+      // &.secondary {
+      //   background-color: $navy; // Default inverted color
+      // }
+
+      @each $color, $value in $color-map {
+        &.#{$color} {
+          background-color: $value;
+        }
+      }
+    }
+
+    &.button {
+      @each $color, $value in $color-map {
+        &.#{$color} {
+          box-shadow: 0 0 0 1px $value inset !important;
+
+          &:not(:hover):not(:focus):not(:active) {
+            color: $value;
+          }
+
+          &:hover,
+          &:focus,
+          &:active {
+            background-color: $value;
+          }
+        }
+      }
+    }
+  }
+
+  &:not(.inverted) {
+    &.button {
+      &.basic {
+        @each $color, $value in $color-map {
+          &.#{$color} {
+            box-shadow: 0 0 0 1px lighten($value, 5%) inset !important;
+
+            &:not(:hover):not(:focus):not(:active) {
+              color: $value;
+            }
+
+            &:hover,
+            &:focus,
+            &:active {
+              background-color: $value;
+            }
+          }
+        }
+      }
+
+      &:not(.basic) {
+        @each $color, $value in $color-map {
+          &.#{$color} {
+            background-color: $value;
+
+            &.link {
+              color: $value;
+
+              &:hover {
+                color: lighten($value, 10%);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.table {
+    &,
+    & thead th {
+      color: #353b3b;
+    }
+
+    &.sortable {
+      th {
+        &:after {
+          position: absolute; // Prevent caret from affecting cell width
+        }
+      }
+
+      &.selectable {
+        td {
+          cursor: pointer;
+        }
+      }
+    }
+
+    &.selectable {
+      tr {
+        &.active {
+          color: mix(#242846, #1270cf) !important;
+
+          &,
+          &:hover {
+            background: #eaf1f5 !important;
+          }
+        }
+      }
+    }
+  }
+
+  code,
+  .code {
+    &.label {
+      font-size: .8em !important; // Override `1em` for labels
+    }
+  }
+
+  &.button,
+  &.label {
+    border-radius: 3px;
+  }
+
+  &.button {
+    &:not(.basic) {
+      font-weight: normal;
+    }
+  }
+
+  // FIXME: Hacky fix for using `.ui.modal > .actions` (ie. <Modal.Actions />) styles
+  // INSIDE a form that wraps <Modal.Content />
+  &.modal > form {
+    > .content {
+      display: block;
+      width: 100%;
+      font-size: 1em;
+      line-height: 1.4;
+      padding: 1.5rem;
+      background: #fff;
+    }
+
+    > .actions {
+      background: #f9fafb;
+      padding: 1rem 1rem;
+      border-top: 1px solid rgba(34,36,38,.15);
+      text-align: right;
+    }
+  }
+
+  &.search {
+    > .results {
+      .result {
+        &:hover {
+          background: inherit;
+        }
+      }
+    }
+  }
+
+  &.input {
+    > input {
+      &[readonly] {
+        border-color: rgba(#ccd1d9, .3);
+
+        &,
+        &:focus {
+          background: rgba(#ccd1d9, .15);
+          color: #737373;
+        }
+      }
+    }
+  }
+
+  &.pagination {
+    &.menu {
+      .item {
+        // Override 3em min width
+        min-width: 1em;
+      }
+    }
+  }
+
+  &.sidebar {
+    // HACK: Overriding `100% !important` set by
+    // SUIR here with `.ui.sidebar`
+    height: auto !important;
+  }
+}

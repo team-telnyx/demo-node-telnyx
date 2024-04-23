@@ -1,0 +1,62 @@
+{
+  "name": "telnyx-demo-portal",
+  "description": "Telnyx Demo Portal",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Telnyx Solution Engineering",
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@microlink/react-json-view": "^1.23.0",
+    "@mui/icons-material": "5.15.13",
+    "@mui/material": "5.15.13",
+    "@mui/x-data-grid": "6.19.6",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
+    "assert": "^2.1.0",
+    "axios": "^1.6.7",
+    "babel-plugin-prismjs": "^2.1.0",
+    "clsx": "^2.1.0",
+    "csvtojson": "^2.0.10",
+    "emoji-picker-react": "^4.8.0",
+    "env-cmd": "^10.1.0",
+    "moment-timezone": "^0.5.45",
+    "purecloud-platform-client-v2": "^189.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-highlight-words": "^0.20.0",
+    "react-router-dom": "^6.22.3",
+    "react-scripts": "5.0.1",
+    "react-toastify": "^10.0.4",
+    "sass": "^1.72.0",
+    "semantic-ui-react": "^2.1.5",
+    "sms-length": "^0.2.0",
+    "web-vitals": "^3.5.2",
+    "zustand": "4.5.2"
+  },
+  "scripts": {
+    "start": "env-cmd -f .env react-scripts start",
+    "build": "env-cmd -f .env react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

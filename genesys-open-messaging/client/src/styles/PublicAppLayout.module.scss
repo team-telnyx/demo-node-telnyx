@@ -1,0 +1,37 @@
+
+@import "~../scss/utils/index";
+
+.article {
+  background-color: #1D2241; // $darkmatter
+  height: 100vh;
+
+  footer {
+    @include font-smoothing;
+
+    a {
+      color: #1D2241 !important;
+    }
+  }
+}
+
+.globalFooter {
+  a {
+    font-size: .875rem !important;
+    color: silver !important;
+  }
+}
+
+.containerContent {
+  min-height: 100vh;
+}
+
+.content {
+  margin: 0 auto;
+  max-width: 35em;
+}
+
+.loginTitle {
+  color: #00C08B;
+  font-size: 2em;
+}
+
