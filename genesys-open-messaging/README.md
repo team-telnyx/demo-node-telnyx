@@ -152,21 +152,21 @@ If you would like to send SMS from a Genesys Cloud Architect or a Scripter tool 
 
 2. In the Contracts section create a JSON object with 4 required parameteres - `from`, `to`, `messaging_profile_id` and `text`
 
- <img src="client/public/images/sms_data_action_1.png"/>
+   <img src="client/public/images/sms_data_action_1.png"/>
 
 3. In the Configuration tab provide URL to Telnyx Send SMS POST method `https://api.telnyx.com/v2/messages` and configure `Authorization` header with your API key `Bearer KEY....`
 
- <img src="client/public/images/sms_data_action_2.png"/>
+   <img src="client/public/images/sms_data_action_2.png"/>
 
 4. Add a configured data action to your Architect flow or to a Script
 
 5. You can also send a message based on some Genesys Cloud events. To enable that feature configure the triggers to run Architect Workflow where you can pass the variables available in your trigger's Event Schema like `conversationId`, `participantId`, `mediaType` and more. Here is an example to trigger Send SMS data action when an interaction ended in ACD queue.
 
-  <img src="client/public/images/gc_trigger.png"/>
+   <img src="client/public/images/gc_trigger.png"/>
 
-In the workflow call a previously configured Data Action to send SMS and assign parameters to the required fields from a trigger schema
+   In the workflow call a previously configured Data Action to send SMS and assign parameters to the required fields from a trigger schema
 
-  <img src="client/public/images/gc_workflow.png"/>
+   <img src="client/public/images/gc_workflow.png"/>
 
 ## Step 5. Set up environment variables
 
