@@ -182,7 +182,7 @@ Create a new copy of `.env.sample` with the name `.env` and set the variables li
 
 Your `.env` files should look like this:
 
-#### SERVER FOLDER
+> **SERVER FOLDER**
 
 ```js
 # Environment
@@ -210,7 +210,7 @@ GC_MESSAGE_DEPLOYMENT_ID= # Add your Genesys message deployment ID here
 GC_SECRET_TOKEN= # Add your Genesys secret token here
 ```
 
-#### CLIENT FOLDER
+> **CLIENT FOLDER**
 
 ```js
 BUILD_PATH=./build
