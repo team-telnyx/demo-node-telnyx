@@ -91,12 +91,12 @@ The following settings will enable usage of the custom applications to send indi
 
    <img src="client/public/images/gc_responses.png"/>
 
-4. To run SMS Campaigns you need to create the contact list first. In the Outbound / List Managament menu import the contact list from a comma delimeted file. Provide a name with a prefix like `SMS_` and set that prefix in your client `.env` file in `REACT_APP_SMS_CONTACT_LISTS_PREFIX` variable. Contact list should have the mandatory columns included where SMS delivery status will be written: `TELNYX_STATUS`,`TELNYX_TIME`,`TELNYX_PRICE`,`TELNYX_MESSAGE_ID` and `TELNYX_MESSAGE`. Sample file format is as below:
+4. To run SMS Campaigns you need to create the contact list first. In the Outbound / List Managament menu import the contact list from a comma delimeted file. Provide a name with a prefix like `SMS_` and set that prefix in your client `.env` file in `REACT_APP_SMS_CONTACT_LISTS_PREFIX` variable. Contact list should have the mandatory columns included where SMS delivery status will be written: `TELNYX_STATUS`,`TELNYX_TIME`,`TELNYX_PRICE`,`TELNYX_MESSAGE_ID` and `TELNYX_MESSAGE`. Add additional custom columns with data which will be injected to the SMS template in the substitution fields (do not use TELNYX\_ prefix for your custom columns - it is reserved for mandatory fields!). Phone number must be provided in the mandatory column name `Number`. See a sample file format below with all the mandatory fields and custom columns `Name`, `Amount` and `PromoCode`:
 
-| Number      | Name | Title | TELNYX_STATUS | TELNYX_TIME | TELNYX_PRICE | TELNYX_MESSAGE_ID | TELNYX_MESSAGE |
-| ----------- | ---- | ----- | ------------- | ----------- | ------------ | ----------------- | -------------- |
-| +1322456789 | John | Smith |               |             |              |                   |                |
-| +1422345214 | Kate | Brown |               |             |              |                   |                |
+| Number      | Name | Amount | PromoCode | TELNYX_STATUS | TELNYX_TIME | TELNYX_PRICE | TELNYX_MESSAGE_ID | TELNYX_MESSAGE |
+| ----------- | ---- | ------ | --------- | ------------- | ----------- | ------------ | ----------------- | -------------- |
+| +1322456789 | John | 50     | TELNYX50  |               |             |              |                   |                |
+| +1422345214 | Kate | 100    | TELNYX100 |               |             |              |                   |                |
 
 5. SMS Campaign application is using Campaign SMS Templates which you can configure in the Contact Center / Canned Responses menu. Create a new library with a prefix in the name like `SMS_TEMPLATES_` and define that prefix in the client `.env` file with the `REACT_APP_SMS_TEMPLATES_PREFIX` variable. Add your message templates with the substitution names which should be equal column names in your contact list used for SMS campaign.
 
