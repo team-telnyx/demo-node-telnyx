@@ -73,6 +73,8 @@ To be able to use an Open Messaging Interface for 2-way SMS communication with t
 
    <img src="client/public/images/gc_architect.png"/>
 
+---
+
 > **CUSTOM APPLICATION - SMS**
 
 The following settings will enable usage of the custom applications to send individual SMSs and handle SMS Campaigns using [Telnyx Messaging API](https://developers.telnyx.com/docs/messaging/messages)
@@ -92,6 +94,8 @@ The following settings will enable usage of the custom applications to send indi
 | +1322456789 | John | Smith |               |             |              |                   |                |
 | +1422345214 | Kate | Brown |               |             |              |                   |                |
 
+---
+
 > **CUSTOM APPLICATION - NUMBER LOOKUP**
 
 The following settings will enable usage of the custom applications to check individual numbers and list of the numbers using [Telnyx Number Lookup API](https://developers.telnyx.com/docs/identity/number-lookup/quickstart)
@@ -105,6 +109,8 @@ The following settings will enable usage of the custom applications to check ind
 | ----------- | -------------- | ----------- | ----------------- | ----------------- | ----------- | ---- | ----------- | ---------- |
 | +1322456789 |                |             |                   |                   |             |      |             |            |
 | +1422345214 |                |             |                   |                   |             |      |             |            |
+
+---
 
 > **CUSTOM APPLICATION - SMS WIDGET**
 
@@ -135,6 +141,8 @@ Follow th steps below to enable SMS application to be available as a widget acce
   }
 }
 ```
+
+---
 
 > **CUSTOM DATA ACTION**
 
