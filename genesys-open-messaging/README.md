@@ -87,7 +87,7 @@ The following settings will enable usage of the custom applications to send indi
 
    <img src="client/public/images/gc_data_table.png"/>
 
-3. SMS application gives you an access to the canned responses so you can create message content quickly injecting predefined responses. To use it in the Contact Center / Canned Responses menu create one or more Library and define your response. Name your library with a prefix like `SMS_RESPONSES_` and define that prefix in the client `.env` file with the `REACT_APP_SMS_RESPONSES_PREFIX` variable.
+3. SMS application gives you an access to the canned responses so you can create message content quickly injecting predefined responses. To use it in the Contact Center / Canned Responses menu create one or more Libraries and define your responses. Name your library with a prefix like `SMS_RESPONSES_` and define that prefix in the client `.env` file with the `REACT_APP_SMS_RESPONSES_PREFIX` variable.
 
    <img src="client/public/images/gc_responses.png"/>
 
@@ -98,7 +98,7 @@ The following settings will enable usage of the custom applications to send indi
 | +1322456789 | John | Smith |               |             |              |                   |                |
 | +1422345214 | Kate | Brown |               |             |              |                   |                |
 
-5. SMS Campaign application is using Campaign SMS Templates you can configure in the Contact Center / Canned Responses menu. Create a new library with a prefix in the name like `SMS_TEMPLATES_` and define that prefix in the client `.env` file with the `REACT_APP_SMS_TEMPLATES_PREFIX` variable. Add your message templates with the substitution names which should be equal column names in your contact list used for SMS campaign. SMS Campaign app will verify if there is a match between substitutions defined in the message template and contact list columns to enable running the campaign.
+5. SMS Campaign application is using Campaign SMS Templates which you can configure in the Contact Center / Canned Responses menu. Create a new library with a prefix in the name like `SMS_TEMPLATES_` and define that prefix in the client `.env` file with the `REACT_APP_SMS_TEMPLATES_PREFIX` variable. Add your message templates with the substitution names which should be equal column names in your contact list used for SMS campaign.
 
    <img src="client/public/images/gc_templates.png"/>
 
