@@ -46,9 +46,9 @@ In the webhook URL field point to your backend server API endpoint.
 
 ## Step 4. Configure Genesys Cloud
 
-For all details please refer to the Genesys Cloud Open Messaging integration here - https://help.mypurecloud.com/articles/get-started-with-open-messaging
-
 > **OPEN MESSAGING INTEGRATION**
+
+For all details please refer to the [Genesys Cloud Open Messaging](https://help.mypurecloud.com/articles/get-started-with-open-messaging) documentation.
 
 To be able to use an Open Messaging Interface for 2-way SMS communication with the standard Genesys Cloud messaging interface you need to complete the following settings:
 
