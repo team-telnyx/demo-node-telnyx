@@ -1,12 +1,12 @@
 # Telnyx SMS API with Genesys Cloud Open Messaging Integration
 
-This is a sample app preseting integration between Telnyx SMS API and Genesys Cloud Open messaging interface. It support the following features:
+This is a sample app preseting integration between Telnyx SMS API and Genesys Cloud Open messaging interface. It supports the feature below and you will be able to choose which of the options you would like to use in your implementation.
 
 1. 2-way messaging communication in a native Genesys Cloud chat interface
 2. Custom app available as a widget to send SMS during voice call
 3. Custom app to handle outbound campaigns based on GC contact lists and message templates
 4. Use Web Services Data Action to trigger outbound SMS in Architect or send SMS from a scripting tool
-5. Custom app with the iintegration to the Telnyx Number Lookup API to check information about the number.
+5. Custom app with the integration to the Telnyx Number Lookup API to check information about the number.
 6. Run Number Lookup campaign to verify the numbers in the contact list
 
  <img src="client/public/images/app_sms.png"/>
@@ -48,7 +48,11 @@ In the webhook URL field point to your backend server API endpoint.
 
 For all details please refer to the Genesys Cloud Open Messaging integration here - https://help.mypurecloud.com/articles/get-started-with-open-messaging
 
-1. Logon to GC organization with admin permissions.
+> **OPEN MESSAGING INTEGRATION**
+
+To be able to use an Open Messaging Interface for 2-way SMS communication with the standard Genesys Cloud messaging interface you need to complete the following settings:
+
+1. Logon to Genesys Cloud organization with the admin permissions.
    In the Message / Platform Configs menu create a new platform config
 
    <img src="client/public/images/gc_platform_config.png" width="50%"/>
@@ -65,17 +69,52 @@ For all details please refer to the Genesys Cloud Open Messaging integration her
 
    <img src="client/public/images/gc_client_credentials.png"/>
 
-5. In the Integrations add a new Client Application for Telnyx SMS web application. In the Configuration tab provide Application URL pointing to your web server with a path `/auth?state=smsmenu` (e.g `https://yourweb.server.domain.com/auth?state=smsmenu`). To display just SMS tab use `/auth?states=sms`, for SMS Campaign tab use `/auth?state=smscampaign`
+5. In Genesys Cloud Architect create a new Inbound Message Flow to route incoming messages to the queue
+
+   <img src="client/public/images/gc_architect.png"/>
+
+> **CUSTOM APPLICATION - SMS**
+
+The following settings will enable usage of the custom applications to send individual SMSs and handle SMS Campaigns using [Telnyx Messaging API](https://developers.telnyx.com/docs/messaging/messages)
+
+1. In the Integrations menu add a new Client Application for Telnyx SMS application. In the Configuration tab provide Application URL pointing to your web server with a path `/auth?state=smsmenu` (e.g `https://yourweb.server.domain.com/auth?state=smsmenu`). To display just SMS tab use `/auth?states=sms`, for SMS Campaign tab use `/auth?state=smscampaign`
 
    <img src="client/public/images/sms_client_application.png"/>
 
-6. Repeat point 5 for Number Lookup application but use a different path `/auth?state=nlmenu`. To display just Number Lookup tab use `/auth?states=nl`, for NL Campaign tab use `/auth?state=nlcampaign`
+2. In the Architect / Data Tables menu create a table in which a list of numbers or alpha sender IDs will be defined to be available for each of the queues. You can put a name like `TELNYX_SMS_FROM` and provide that name as a value for `REACT_APP_SMS_FROM_TABLE` parameter in the client `.env` file. Table should have 3 mandatory columns: `id`, `queue` and `from`
 
-7. In the Integrations menu create a new widget application to be available when handling voice calls. In the Configuration tab provide URL to your web server with the path `/auth?state=sms` (e.g. `https://your_web_server/auth?state=sms`)
+ <img src="client/public/images/gc_data_table.png"/>
+
+3. To run SMS Campaigns you need to create the contact list first. In the Outbound / List Managament menu import the contact list from a comma delimeted file. Provide a name with a prefix like `SMS_` and set that prefix in your client `.env` file in `REACT_APP_SMS_CONTACT_LISTS_PREFIX` variable. Contact list should have the mandatory columns included where SMS delivery status will be written: `TELNYX_STATUS`,`TELNYX_TIME`,`TELNYX_PRICE`,`TELNYX_MESSAGE_ID` and `TELNYX_MESSAGE`. Sample file format is as below:
+
+| Number      | Name | Title | TELNYX_STATUS | TELNYX_TIME | TELNYX_PRICE | TELNYX_MESSAGE_ID | TELNYX_MESSAGE |
+| ----------- | ---- | ----- | ------------- | ----------- | ------------ | ----------------- | -------------- |
+| +1322456789 | John | Smith |               |             |              |                   |                |
+| +1422345214 | Kate | Brown |               |             |              |                   |                |
+
+> **CUSTOM APPLICATION - NUMBER LOOKUP**
+
+The following settings will enable usage of the custom applications to check individual numbers and list of the numbers using [Telnyx Number Lookup API](https://developers.telnyx.com/docs/identity/number-lookup/quickstart)
+
+1. In the Integrations menu add a new Client Application for Telnyx Number Lookup application. In the Configuration tab provide Application URL pointing to your web server with a path `/auth?state=nlmenu`. To display just Number Lookup tab use `/auth?states=nl`, for NL Campaign tab use `/auth?state=nlcampaign`
+
+2. For the Number Lookup Campaigns create a separate contact list with a prefix like `NL_` and configue that prefix in the client `.env` file in the `REACT_APP_NL_CONTACT_LISTS_PREFIX` variable.
+   Comma delimited file to be imported should have the following mandatory format:
+
+| Number      | NationalFormat | CountryCode | MobileCountryCode | MobileNetworkCode | CarrierName | Type | ValidNumber | CallerName |
+| ----------- | -------------- | ----------- | ----------------- | ----------------- | ----------- | ---- | ----------- | ---------- |
+| +1322456789 |                |             |                   |                   |             |      |             |            |
+| +1422345214 |                |             |                   |                   |             |      |             |            |
+
+> **CUSTOM APPLICATION - SMS WIDGET**
+
+Follow th steps below to enable SMS application to be available as a widget accessible when handling voice calls and be able to quickly send a message to a caller (ANI number of a caller will be copied to the `Number To` field in the SMS app)
+
+1. In the Integrations menu create a new widget application to be available when handling voice calls. In the Configuration tab provide URL to your web server with the path `/auth?state=sms` (e.g. `https://your_web_server/auth?state=sms`)
 
    <img src="client/public/images/sms_widget_application.png"/>
 
-In the Advanced tab provide the following JSON object:
+2. In the Advanced tab provide the following JSON object:
 
 ```js
 {
@@ -97,41 +136,23 @@ In the Advanced tab provide the following JSON object:
 }
 ```
 
-8. In Genesys Cloud Architect create a new Inbound Message Flow to route incoming SMSs to your queue
+> **CUSTOM DATA ACTION**
 
- <img src="client/public/images/gc_architect.png"/>
+If you would like to send SMS from a Genesys Cloud Architect or a Scripter tool you can configure Web Services Data Action for Telnyx SMS API [Send Message](https://developers.telnyx.com/api/messaging/send-message) method.
 
-9. If you would like to send SMS from Genesys Cloud Architect or Scripter tool you can configure Web Services Data Action for Telnyx SMS API Send Message method as documented here - https://developers.telnyx.com/api/messaging/send-message
+1. Go to Integrations / Actions menu and add a new Web Services Data Action
 
-a) In the Contracts section create a JSON object with 4 required parameteres - `from`, `to`, `messaging_profile_id` and `text`
+2. In the Contracts section create a JSON object with 4 required parameteres - `from`, `to`, `messaging_profile_id` and `text`
 
  <img src="client/public/images/sms_data_action_1.png"/>
 
-b) In the Configuration tab provide URL to Telnyx Send SMS POST method `https://api.telnyx.com/v2/messages` and configure `Authorization` header with your API key `Bearer KEY....`
+3. In the Configuration tab provide URL to Telnyx Send SMS POST method `https://api.telnyx.com/v2/messages` and configure `Authorization` header with your API key `Bearer KEY....`
 
  <img src="client/public/images/sms_data_action_2.png"/>
 
-10. In the Outbound / List Managament menu you can import contact lists from comma delimeted files to be used by SMS Campaign app. Name them with a prefix like `SMS_` and set that prefix in your client `.env` file in `REACT_APP_SMS_CONTACT_LISTS_PREFIX` variable.
-    Contact list should have the mandatory columns included where SMS delivery status will be written: `TELNYX_STATUS`,`TELNYX_TIME`,`TELNYX_PRICE`,`TELNYX_MESSAGE_ID` and `TELNYX_MESSAGE`. Sample file format is as below:
+4. Add a configured data action to your Architect flow or to a Script
 
-| Number      | Name | Title | TELNYX_STATUS | TELNYX_TIME | TELNYX_PRICE | TELNYX_MESSAGE_ID | TELNYX_MESSAGE |
-| ----------- | ---- | ----- | ------------- | ----------- | ------------ | ----------------- | -------------- |
-| +1322456789 | John | Smith |               |             |              |                   |                |
-| +1422345214 | Kate | Brown |               |             |              |                   |                |
-
-For the Number Lookup Campaigns create separate contact list with a prefix like `NL_` and configue that prefix in the client `.env` file in the `REACT_APP_NL_CONTACT_LISTS_PREFIX` variable.
-Comma delimited file to be imported should have the following mandatory format:
-
-| Number      | NationalFormat | CountryCode | MobileCountryCode | MobileNetworkCode | CarrierName | Type | ValidNumber | CallerName |
-| ----------- | -------------- | ----------- | ----------------- | ----------------- | ----------- | ---- | ----------- | ---------- |
-| +1322456789 |                |             |                   |                   |             |      |             |            |
-| +1422345214 |                |             |                   |                   |             |      |             |            |
-
-11. In the Architect / Data Tables menu create a table in which a list of numbers or alpha sender IDs will be defined to be available for each of the queues. You can put a name like `TELNYX_SMS_FROM` and provide that name as a value for `REACT_APP_SMS_FROM_TABLE` parameter in the client `.env` file. Table should have 3 mandatory columns: `id`, `queue` and `from`
-
- <img src="client/public/images/gc_data_table.png"/>
-
-12. If you would like to send SMS based on some Genesys Cloud events you can configure the triggers to run Architect Workflow where you can pass the variables available in your trigger's Event Schema like `conversationId`, `participantId`, `mediaType` and more. Here is an example to trigger Send SMS action when an interaction ended in ACD queue.
+5. You can also send a message based on some Genesys Cloud events. To enable that feature configure the triggers to run Architect Workflow where you can pass the variables available in your trigger's Event Schema like `conversationId`, `participantId`, `mediaType` and more. Here is an example to trigger Send SMS data action when an interaction ended in ACD queue.
 
   <img src="client/public/images/gc_trigger.png"/>
 
