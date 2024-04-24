@@ -85,14 +85,22 @@ The following settings will enable usage of the custom applications to send indi
 
 2. In the Architect / Data Tables menu create a table in which a list of numbers or alpha sender IDs will be defined to be available for each of the queues. You can put a name like `TELNYX_SMS_FROM` and provide that name as a value for `REACT_APP_SMS_FROM_TABLE` parameter in the client `.env` file. Table should have 3 mandatory columns: `id`, `queue` and `from`
 
- <img src="client/public/images/gc_data_table.png"/>
+   <img src="client/public/images/gc_data_table.png"/>
 
-3. To run SMS Campaigns you need to create the contact list first. In the Outbound / List Managament menu import the contact list from a comma delimeted file. Provide a name with a prefix like `SMS_` and set that prefix in your client `.env` file in `REACT_APP_SMS_CONTACT_LISTS_PREFIX` variable. Contact list should have the mandatory columns included where SMS delivery status will be written: `TELNYX_STATUS`,`TELNYX_TIME`,`TELNYX_PRICE`,`TELNYX_MESSAGE_ID` and `TELNYX_MESSAGE`. Sample file format is as below:
+3. SMS application gives you an access to the canned responses so you can create message content quickly injecting predefined responses. To use it in the Contact Center / Canned Responses menu create one or more Library and define your response. Name your library with a prefix like `SMS_RESPONSES_` and define that prefix in the client `.env` file with the `REACT_APP_SMS_RESPONSES_PREFIX` variable.
+
+   <img src="client/public/images/gc_responses.png"/>
+
+4. To run SMS Campaigns you need to create the contact list first. In the Outbound / List Managament menu import the contact list from a comma delimeted file. Provide a name with a prefix like `SMS_` and set that prefix in your client `.env` file in `REACT_APP_SMS_CONTACT_LISTS_PREFIX` variable. Contact list should have the mandatory columns included where SMS delivery status will be written: `TELNYX_STATUS`,`TELNYX_TIME`,`TELNYX_PRICE`,`TELNYX_MESSAGE_ID` and `TELNYX_MESSAGE`. Sample file format is as below:
 
 | Number      | Name | Title | TELNYX_STATUS | TELNYX_TIME | TELNYX_PRICE | TELNYX_MESSAGE_ID | TELNYX_MESSAGE |
 | ----------- | ---- | ----- | ------------- | ----------- | ------------ | ----------------- | -------------- |
 | +1322456789 | John | Smith |               |             |              |                   |                |
 | +1422345214 | Kate | Brown |               |             |              |                   |                |
+
+5. SMS Campaign application is using Campaign SMS Templates you can configure in the Contact Center / Canned Responses menu. Create a new library with a prefix in the name like `SMS_TEMPLATES_` and define that prefix in the client `.env` file with the `REACT_APP_SMS_TEMPLATES_PREFIX` variable. Add your message templates with the substitution names which should be equal column names in your contact list used for SMS campaign. SMS Campaign app will verify if there is a match between substitutions defined in the message template and contact list columns to enable running the campaign.
+
+   <img src="client/public/images/gc_templates.png"/>
 
 ---
 
