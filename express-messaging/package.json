@@ -1,19 +1,29 @@
 {
   "name": "express-messaging",
   "version": "1.0.0",
-  "description": "<div align=\"center\">",
-  "main": "index.js",
+  "description": "",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "tsx index.ts"
   },
-  "author": "Dan Tolbert",
+  "author": "Telnyx <support@telnyx.com> (https://telnyx.com)",
   "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": "^18 || >=20"
+  },
   "dependencies": {
     "aws-sdk": "^2.743.0",
-    "axios": "^0.20.0",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "telnyx": "^1.10.0"
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.0",
+    "express": "^4.21.1",
+    "telnyx": "2.0.0-alpha.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.8.0"
   }
 }
