@@ -57,21 +57,19 @@ router
   .route("/inbound")
   .post(async function inboundMessageController(req, res) {
     res.sendStatus(200); // Play nice and respond to webhook
-    const event = req.body.data;
-    console.log(`Received inbound message with ID: ${event.payload.id}`);
+    const event = (req.body as Telnyx.events.InboundMessageEvent).data!;
+    console.log(`Received inbound message with ID: ${event.payload?.id}`);
     const dlrUrl = new URL(
       "/messaging/outbound",
       `${req.protocol}://${req.hostname}`
     ).href;
-    const toNumber = event.payload.to[0].phone_number as string;
-    const fromNumber = event.payload["from"].phone_number as string;
-    const medias = event.payload.media;
-    const mediaPromises: Promise<string>[] = medias.map(
-      async (media: { url: string }) => {
-        const fileName = await downloadFile(media.url);
-        return uploadFile(fileName);
-      }
-    );
+    const toNumber = event.payload?.to?.at(0)?.phone_number as string;
+    const fromNumber = event.payload?.from?.phone_number as string;
+    const medias = event.payload?.media || [];
+    const mediaPromises: Promise<string>[] = medias.map(async (media) => {
+      const fileName = await downloadFile(media.url!);
+      return uploadFile(fileName);
+    });
     const mediaUrls = await Promise.all(mediaPromises);
     try {
       const messageRequest: Telnyx.MessagesCreateOptionalParams = {
@@ -96,8 +94,8 @@ router
   .route("/outbound")
   .post(async function outboundMessageController(req, res) {
     res.sendStatus(200); // Play nice and respond to webhook
-    const event = req.body.data;
-    console.log(`Received message DLR with ID: ${event.payload.id}`);
+    const event = (req.body as Telnyx.events.OutboundMessageEvent).data!;
+    console.log(`Received message DLR with ID: ${event.payload?.id}`);
   });
 
 export default router;
