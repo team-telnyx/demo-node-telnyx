@@ -16,9 +16,9 @@ The full API documentation and tutorial is available on [developers.telnyx.com](
 
 You will need to set up:
 
-* [Telnyx Account](https://telnyx.com/sign-up?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
-* [Telnyx Phone Number](https://portal.telnyx.com/#/app/numbers/my-numbers?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) enabled with:
-* Ability to receive webhooks (with something like [ngrok](https://developers.telnyx.com/docs/v2/development/ngrok?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link))
+- [Telnyx Account](https://telnyx.com/sign-up?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
+- [Telnyx Phone Number](https://portal.telnyx.com/#/app/numbers/my-numbers?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) enabled with:
+- Ability to receive webhooks (with something like [ngrok](https://developers.telnyx.com/docs/development?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link#ngrok-setup))
 
 ## Watch the Recording
 
