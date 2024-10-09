@@ -7,28 +7,28 @@ import Telnyx from "telnyx";
 import messaging from "./messaging";
 
 const app = express();
+const textEncoder = new TextEncoder();
 
 const telnyx = new Telnyx(config.TELNYX_API_KEY);
 
-const webhookValidator = (req, res, next) => {
+app.use(express.json());
+
+app.use(function webhookValidator(req, res, next) {
   try {
     telnyx.webhooks.constructEvent(
       JSON.stringify(req.body, null, 2),
-      req.header("telnyx-signature-ed25519"),
-      req.header("telnyx-timestamp"),
-      config.TELNYX_PUBLIC_KEY,
+      req.header("telnyx-signature-ed25519")!,
+      req.header("telnyx-timestamp")!,
+      textEncoder.encode(config.TELNYX_PUBLIC_KEY),
       300
     );
     next();
-    return;
   } catch (e) {
-    console.log(`Invalid webhook: ${e.message}`);
-    return res.status(400).send(`Webhook Error: ${e.message}`);
+    const message = (e as Error).message;
+    console.log(`Invalid webhook: ${message}`);
+    res.status(400).send(`Webhook Error: ${message}`);
   }
-};
-
-app.use(express.json());
-app.use(webhookValidator);
+});
 
 app.use("/messaging", messaging);
 

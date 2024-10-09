@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsx index.ts"
+    "start": "tsx index.ts",
+    "type-check": "tsc"
   },
   "author": "Telnyx <support@telnyx.com> (https://telnyx.com)",
   "license": "UNLICENSED",
@@ -18,9 +19,10 @@
     "axios": "^1.7.7",
     "dotenv": "^16.4.0",
     "express": "^4.21.1",
-    "telnyx": "2.0.0-alpha.5"
+    "telnyx": "2.0.0-alpha.6"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/node": "^22.7.4",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
