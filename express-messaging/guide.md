@@ -73,11 +73,11 @@ TELNYX_MMS_S3_BUCKET=
 
 ## Code-along
 
-We'll use a few `.js` files to build the MMS application. `index.js` as our entry point and `messaging.js` to contain our routes and controllers for the app.
+We'll use a few `.ts` files to build the MMS application. `index.ts` as our entry point and `messaging.ts` to contain our routes and controllers for the app.
 
-```
-touch index.js
-touch messaging.js
+```shell
+touch index.ts
+touch messaging.ts
 ```
 
 ### Setup Express Server
@@ -86,13 +86,15 @@ touch messaging.js
 // In index.ts
 import "dotenv/config";
 
-const express = require("express");
-const config = require("./config");
-const telnyx = require("telnyx")(config.TELNYX_API_KEY);
+import express from "express";
+import * as config from "./config";
+import Telnyx from "telnyx";
 
-const messaging = require("./messaging");
+import messaging from "./messaging";
 
 const app = express();
+
+const telnyx = new Telnyx(config.TELNYX_API_KEY);
 
 app.use(express.json());
 
@@ -122,8 +124,8 @@ Telnyx signs each webhook that can be validated by checking the signature with y
 
 After declaring the `const app=express();` and before `app.use('/messaging', messaging);` add the following code to validate the webhook in indeed from Telnyx.
 
-```js
-// in index.js
+```typescript
+// in index.ts
 const webhookValidator = (req, res, next) => {
   try {
     telnyx.webhooks.constructEvent(
@@ -145,27 +147,29 @@ app.use(webhookValidator);
 
 ### Media Download & Upload Functions
 
-Before diving into the inbound message handler, first we'll create a few functions to manage our attachments inside the `messaging.js` file.
+Before diving into the inbound message handler, first we'll create a few functions to manage our attachments inside the `messaging.ts` file.
 
 - `downloadFile` saves the content from a URL to disk
 - `uploadFile` uploads the file passed to AWS S3 (and makes object public)
 - Note that this application is demonstrating 2 topics at once, downloading & uploading. It could be improved by piping or streaming the data from Telnyx to S3 instead of saving to disk.
 
-```js
-// In messaging.js
-const express = require("express");
-const config = require("./config");
-const fs = require("fs");
-const axios = require("axios");
-const AWS = require("aws-sdk");
-const path = require("path");
+```typescript
+// In messaging.ts
+import express from "express";
+import * as config from "./config";
+import fs from "fs";
+import axios from "axios";
+import AWS from "aws-sdk";
+import path from "path";
+import Telnyx from "telnyx";
+
 AWS.config.update({ region: config.AWS_REGION });
 
-const telnyx = require("telnyx")(config.TELNYX_API_KEY);
-const router = (module.exports = express.Router());
-const url = require("url");
+const telnyx = new Telnyx(config.TELNYX_API_KEY);
 
-const uploadFile = async (filePath) => {
+const router = express.Router();
+
+const uploadFile = async (filePath: string): Promise<string> => {
   const s3 = new AWS.S3({ apiVersion: "2006-03-01" });
   const bucketName = config.TELNYX_MMS_S3_BUCKET;
   const fileName = path.basename(filePath);
@@ -187,7 +191,7 @@ const uploadFile = async (filePath) => {
   });
 };
 
-const downloadFile = async (url) => {
+async function downloadFile(url: string): Promise<string> {
   const fileLocation = path.resolve(
     __dirname,
     url.substring(url.lastIndexOf("/") + 1)
@@ -204,7 +208,7 @@ const downloadFile = async (url) => {
     });
     response.data.on("error", reject);
   });
-};
+}
 ```
 
 ### Inbound Message Handling
@@ -218,8 +222,8 @@ The flow of our function is (at a high level):
 3. Iterate over any attachments/media and call our `downloadUpload` function
 4. Send the outbound message back to the original sender with the media attachments
 
-```js
-// In messaging.js
+```typescript
+// In messaging.ts
 const inboundMessageController = async (req, res) => {
   res.sendStatus(200); // Play nice and respond to webhook
   const event = req.body.data;
@@ -256,10 +260,10 @@ const inboundMessageController = async (req, res) => {
 
 ### Outbound Message Handling
 
-As we defined our `webhook_url` path to be `/messaging/outbound` we'll need to create a function that accepts a POST request to that path within messaging.js.
+As we defined our `webhook_url` path to be `/messaging/outbound` we'll need to create a function that accepts a POST request to that path within messaging.ts.
 
-```js
-// In messaging.js
+```typescript
+// In messaging.ts
 const outboundMessageController = async (req, res) => {
   res.sendStatus(200); // Play nice and respond to webhook
   const event = req.body.data;
@@ -269,47 +273,50 @@ const outboundMessageController = async (req, res) => {
 
 ### Decare routes for inbound and outbound messaging
 
-At the bottom of `messaging.js` add the routes and point to the correct controller function
+At the bottom of `messaging.ts` add the routes and point to the correct controller function
 
-```js
+```typescript
 router.route("/inbound").post(inboundMessageController);
 
 router.route("/outbound").post(outboundMessageController);
 ```
 
-### Final index.js
+### Final index.ts
 
-All together the index.js should look something like:
+All together the index.ts should look something like:
 
-```js
-require("dotenv").config();
+```typescript
+import "dotenv/config";
 
-const express = require("express");
-const config = require("./config");
-const telnyx = require("telnyx")(config.TELNYX_API_KEY);
+import express from "express";
+import * as config from "./config";
+import Telnyx from "telnyx";
 
-const messaging = require("./messaging");
+import messaging from "./messaging";
 
 const app = express();
+const textEncoder = new TextEncoder();
 
-const webhookValidator = (req, res, next) => {
+const telnyx = new Telnyx(config.TELNYX_API_KEY);
+
+app.use(express.json());
+
+app.use(function webhookValidator(req, res, next) {
   try {
     telnyx.webhooks.constructEvent(
       JSON.stringify(req.body, null, 2),
-      req.header("telnyx-signature-ed25519"),
-      req.header("telnyx-timestamp"),
-      config.TELNYX_PUBLIC_KEY
+      req.header("telnyx-signature-ed25519")!,
+      req.header("telnyx-timestamp")!,
+      textEncoder.encode(config.TELNYX_PUBLIC_KEY),
+      300
     );
     next();
-    return;
   } catch (e) {
-    console.log(`Invalid webhook: ${e.message}`);
-    return res.status(400).send(`Webhook Error: ${e.message}`);
+    const message = (e as Error).message;
+    console.log(`Invalid webhook: ${message}`);
+    res.status(400).send(`Webhook Error: ${message}`);
   }
-};
-
-app.use(express.json());
-app.use(webhookValidator);
+});
 
 app.use("/messaging", messaging);
 
@@ -317,31 +324,24 @@ app.listen(config.TELNYX_APP_PORT);
 console.log(`Server listening on port ${config.TELNYX_APP_PORT}`);
 ```
 
-### Final messaging.js
+### Final messaging.ts
 
-```js
-const express = require("express");
-const config = require("./config");
-const fs = require("fs");
-const axios = require("axios");
-const AWS = require("aws-sdk");
-const path = require("path");
+```typescript
+import express from "express";
+import * as config from "./config";
+import fs from "fs";
+import axios from "axios";
+import AWS from "aws-sdk";
+import path from "path";
+import Telnyx from "telnyx";
+
 AWS.config.update({ region: config.AWS_REGION });
 
-const telnyx = require("telnyx")(config.TELNYX_API_KEY);
-const router = (module.exports = express.Router());
-const url = require("url");
+const telnyx = new Telnyx(config.TELNYX_API_KEY);
 
-const toBase64 = (data) => new Buffer.from(data).toString("base64");
-const fromBase64 = (data) => new Buffer.from(data, "base64").toString();
+const router = express.Router();
 
-const outboundMessageController = async (req, res) => {
-  res.sendStatus(200); // Play nice and respond to webhook
-  const event = req.body.data;
-  console.log(`Received message DLR with ID: ${event.payload.id}`);
-};
-
-const uploadFile = async (filePath) => {
+const uploadFile = async (filePath: string): Promise<string> => {
   const s3 = new AWS.S3({ apiVersion: "2006-03-01" });
   const bucketName = config.TELNYX_MMS_S3_BUCKET;
   const fileName = path.basename(filePath);
@@ -363,7 +363,7 @@ const uploadFile = async (filePath) => {
   });
 };
 
-const downloadFile = async (url) => {
+async function downloadFile(url: string): Promise<string> {
   const fileLocation = path.resolve(
     __dirname,
     url.substring(url.lastIndexOf("/") + 1)
@@ -380,50 +380,61 @@ const downloadFile = async (url) => {
     });
     response.data.on("error", reject);
   });
-};
+}
 
-const inboundMessageController = async (req, res) => {
-  res.sendStatus(200); // Play nice and respond to webhook
-  const event = req.body.data;
-  console.log(`Received inbound message with ID: ${event.payload.id}`);
-  const dlrUrl = new URL(
-    "/messaging/outbound",
-    `${req.protocol}://${req.hostname}`
-  ).href;
-  const toNumber = event.payload.to[0].phone_number;
-  const fromNumber = event.payload["from"].phone_number;
-  const medias = event.payload.media;
-  const mediaPromises = medias.map(async (media) => {
-    const fileName = await downloadFile(media.url);
-    return uploadFile(fileName);
+router
+  .route("/inbound")
+  .post(async function inboundMessageController(req, res) {
+    res.sendStatus(200); // Play nice and respond to webhook
+    const event = req.body.data;
+    console.log(`Received inbound message with ID: ${event.payload.id}`);
+    const dlrUrl = new URL(
+      "/messaging/outbound",
+      `${req.protocol}://${req.hostname}`
+    ).href;
+    const toNumber = event.payload.to[0].phone_number as string;
+    const fromNumber = event.payload["from"].phone_number as string;
+    const medias = event.payload.media;
+    const mediaPromises: Promise<string>[] = medias.map(
+      async (media: { url: string }) => {
+        const fileName = await downloadFile(media.url);
+        return uploadFile(fileName);
+      }
+    );
+    const mediaUrls = await Promise.all(mediaPromises);
+    try {
+      const messageRequest: Telnyx.MessagesCreateOptionalParams = {
+        from: toNumber,
+        to: fromNumber,
+        text: "👋 Hello World",
+        media_urls: mediaUrls,
+        webhook_url: dlrUrl,
+        use_profile_webhooks: false,
+        auto_detect: false,
+      };
+
+      const telnyxResponse = await telnyx.messages.create(messageRequest);
+      console.log(`Sent message with id: ${telnyxResponse.data!.id}`);
+    } catch (e) {
+      console.log("Error sending message");
+      console.log(e);
+    }
   });
-  const mediaUrls = await Promise.all(mediaPromises);
-  try {
-    const messageRequest = {
-      from: toNumber,
-      to: fromNumber,
-      text: "👋 Hello World",
-      media_urls: mediaUrls,
-      webhook_url: dlrUrl,
-      use_profile_webhooks: false,
-    };
 
-    const telnyxResponse = await telnyx.messages.create(messageRequest);
-    console.log(`Sent message with id: ${telnyxResponse.data.id}`);
-  } catch (e) {
-    console.log("Error sending message");
-    console.log(e);
-  }
-};
+router
+  .route("/outbound")
+  .post(async function outboundMessageController(req, res) {
+    res.sendStatus(200); // Play nice and respond to webhook
+    const event = req.body.data;
+    console.log(`Received message DLR with ID: ${event.payload.id}`);
+  });
 
-router.route("/inbound").post(inboundMessageController);
-
-router.route("/outbound").post(outboundMessageController);
+export default router;
 ```
 
 ## Usage
 
-Start the server `node index.js`
+Start the server `npm run server`
 
 When you are able to run the server locally, the final step involves making your application accessible from the internet. So far, we've set up a local web server. This is typically not accessible from the public internet, making testing inbound requests to web applications difficult.
 
