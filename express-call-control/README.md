@@ -93,6 +93,7 @@ Run the following commands to get started
 
 ```
 $ git clone https://github.com/d-telnyx/demo-node-telnyx.git
+$ cd express-call-control
 ```
 
 ### Run
