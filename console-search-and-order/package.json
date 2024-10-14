@@ -18,7 +18,7 @@
     "dotenv": "^16.4.0",
     "express": "^4.21.1",
     "prompts": "^2.4.1",
-    "telnyx": "2.0.0-beta.2"
+    "telnyx": "2.0.0-beta.3"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
