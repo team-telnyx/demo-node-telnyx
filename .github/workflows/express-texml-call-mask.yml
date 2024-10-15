@@ -1,0 +1,30 @@
+name: CI express-texml-call-mask
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "express-texml-call-mask/**"
+  pull_request:
+    branches: [master]
+    paths:
+      - "express-texml-call-mask/**"
+
+jobs:
+  type-check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: express-texml-call-mask
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run type-check
