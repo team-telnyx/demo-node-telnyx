@@ -1,19 +1,32 @@
 {
-  "name": "webinar-demo",
-  "version": "0.0.1",
-  "description": "Send and receive messages",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "name": "express-sms-webinar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
   "keywords": [
     "telnyx"
   ],
-  "author": "Dan Tolbert",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsx index.ts",
+    "type-check": "tsc"
+  },
+  "author": "Telnyx <support@telnyx.com> (https://telnyx.com)",
+  "type": "module",
+  "engines": {
+    "node": "^18 || >=20"
+  },
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "telnyx": "^1.10.1"
+    "dotenv": "^16.4.0",
+    "express": "^4.21.1",
+    "telnyx": "2.0.0-beta.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.4",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.8.0"
   }
 }
