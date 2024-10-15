@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "module": "EsNext",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "checkJs": false,
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strict": true,
+    "strictFunctionTypes": true,
+    "types": [ "node" ],
+    "esModuleInterop": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true
+  },
+  "exclude": ["node_modules"]
+}

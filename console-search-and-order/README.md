@@ -16,20 +16,20 @@ The full documentation and tutorial is available on [developers.telnyx.com](http
 
 You will need to set up:
 
-* [Telnyx Account](https://telnyx.com/sign-up?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
+- [Telnyx Account](https://telnyx.com/sign-up?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
 
 ## What you can do
 
-* Search toll-free or local
-* Perform partial searches
-* Order numbers
+- Search toll-free or local
+- Perform partial searches
+- Order numbers
 
 ## Usage
 
 The following environmental variables need to be set
 
 | Variable                      | Description                                                                                                                                                                                                       |
-|:------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :---------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `TELNYX_API_KEY`              | Your [Telnyx API Key](https://portal.telnyx.com/#/app/api-keys?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)                                                                       |
 | `TELNYX_CONNECTION_ID`        | Your [Call-Control](https://portal.telnyx.com/#/app/call-control/applications) or [TeXML](https://portal.telnyx.com/#/app/call-control/texml) or [SIP Connection](https://portal.telnyx.com/#/app/connections) ID |
 | `TELNYX_MESSAGING_PROFILE_ID` | Your [Messaging Profile Id](https://portal.telnyx.com/#/app/messaging)                                                                                                                                            |
@@ -37,7 +37,7 @@ The following environmental variables need to be set
 
 ### .env file
 
-This app uses the excellent [dotenv](https://www.npmjs.com/package/dotenv) package to manage environment variables.
+This app uses the [dotenv](https://www.npmjs.com/package/dotenv) package to manage environment variables.
 
 Make a copy of [`.env.sample`](./.env.sample) and save as `.env` and update the variables to match your creds.
 
@@ -60,10 +60,9 @@ $ npm install
 
 ### Run
 
-Run the Node script `node index.js` from the command line and answer the prompts to search and order
+Run the Node script `npm run start` from the command line and answer the prompts to search and order
 
-```
- node index.js
+```bash
 ✔ toll-free or local search? … local
 ✔ areaCode to search? … 828
 {
