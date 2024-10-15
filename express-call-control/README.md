@@ -12,38 +12,40 @@ Sample application demonstrating Telnyx-Node Call Control functionality.
 
 You will need to set up:
 
-* [Telnyx Account](https://telnyx.com/sign-up?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
-* [Telnyx Phone Number](https://portal.telnyx.com/#/app/numbers/my-numbers) enabled with:
-    * [Telnyx Call Control Application](https://portal.telnyx.com/#/app/call-control/applications)
-    * [Telnyx Outbound Voice Profile](https://portal.telnyx.com/#/app/outbound-profiles)
-* [Node & NPM](https://developers.telnyx.com/docs/v2/development/dev-env-setup?lang=node&utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) installed
+- [Telnyx Account](https://telnyx.com/sign-up?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
+- [Telnyx Phone Number](https://portal.telnyx.com/#/app/numbers/my-numbers) enabled with:
+  - [Telnyx Call Control Application](https://portal.telnyx.com/#/app/call-control/applications)
+  - [Telnyx Outbound Voice Profile](https://portal.telnyx.com/#/app/outbound-profiles)
+- [Node & NPM](https://developers.telnyx.com/docs/v2/development/dev-env-setup?lang=node&utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) installed
 
 ## What you can do
 
 This app, when running has the following behavior for inbound and outbound calls:
 
 Inbound:
-* Receives inbound callback
-* Answers the call
-* Speaks a sentence and waits for speak.ended callback
-* Ends the call
+
+- Receives inbound callback
+- Answers the call
+- Speaks a sentence and waits for speak.ended callback
+- Ends the call
 
 Outbound:
-* Makes the call to the specified number
-* On answer, speaks audio
-* Waits for speak.ended callback
-* Ends the call
+
+- Makes the call to the specified number
+- On answer, speaks audio
+- Waits for speak.ended callback
+- Ends the call
 
 ## Usage
 
 The following environmental variables need to be set
 
-| Variable               | Description                                                                                                                                              |
-|:-----------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `TELNYX_API_KEY`       | Your [Telnyx API Key](https://portal.telnyx.com/#/app/api-keys?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)              |
-| `TELNYX_NUMBER`        | Your [Telnyx Phone Number](https://portal.telnyx.com/#/app/numbers/my-numbers)                                                                           |
-| `TELNYX_CONNECTION_ID` | Your [Telnyx Call Control Application ID](https://portal.telnyx.com/#/app/call-control/applications)                                              |
-| `TELNYX_APP_PORT`      | **Defaults to `8000`** The port the app will be served.                                                                                                  |
+| Variable               | Description                                                                                                                                 |
+| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------ |
+| `TELNYX_API_KEY`       | Your [Telnyx API Key](https://portal.telnyx.com/#/app/api-keys?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) |
+| `TELNYX_NUMBER`        | Your [Telnyx Phone Number](https://portal.telnyx.com/#/app/numbers/my-numbers)                                                              |
+| `TELNYX_CONNECTION_ID` | Your [Telnyx Call Control Application ID](https://portal.telnyx.com/#/app/call-control/applications)                                        |
+| `TELNYX_APP_PORT`      | **Defaults to `8000`** The port the app will be served.                                                                                     |
 
 ### .env file
 
@@ -91,16 +93,18 @@ Run the following commands to get started
 
 ```
 $ git clone https://github.com/d-telnyx/demo-node-telnyx.git
+$ cd express-call-control
 ```
 
 ### Run
 
-Start the server `node index.js`
+Start the server `npm run start`
 
 When the application is started, express serves it to the port specified in the .env file (Default 8000), so you can sipmly take a look at the application at localhost:8000.
 
 **Note: You must enter phone number in E.164 format (i.e. +12345678910) for the call to be sent correctly.**
 
 Once everything is setup, you should now be able to:
-* Make calls to a specified outbound number
-* Receive an inbound call
+
+- Make calls to a specified outbound number
+- Receive an inbound call
