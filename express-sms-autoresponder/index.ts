@@ -4,7 +4,7 @@ import express from "express";
 
 const telnyx = new Telnyx(String(process.env.TELNYX_API_KEY || ""));
 const app = express();
-const port = 5000;
+const port = process.env.PORT;
 
 app.use(express.json());
 
