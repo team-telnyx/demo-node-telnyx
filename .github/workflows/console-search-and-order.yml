@@ -1,0 +1,30 @@
+name: CI console-search-and-order
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "console-search-and-order/**"
+  pull_request:
+    branches: [master]
+    paths:
+      - "console-search-and-order/**"
+
+jobs:
+  type-check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: console-search-and-order
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run type-check
