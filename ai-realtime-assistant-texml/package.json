@@ -1,0 +1,8 @@
+{
+  "name": "realtime-speech-assistant-with-openai-node",
+  "version": "1.0.0",
+  "description": "Use Telnyx with OpenAI to create a Realtime Speech Assistant",
+  "main": "index.js",
+  "author": "Telnyx",
+  "license": "MIT"
+}
