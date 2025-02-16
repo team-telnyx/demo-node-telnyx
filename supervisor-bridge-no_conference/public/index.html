@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Supervisor Bridge Control</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin: 8px 0 4px; }
+    input, select { padding: 6px; width: 300px; max-width: 100%; }
+    button { padding: 8px 16px; margin-top: 12px; }
+    #result { margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #eef; }
+  </style>
+</head>
+<body>
+  <!-- put the telnyx logo here in the body and center it. Use Telnyx black logo-->
+  <center>
+    <img src="https://cdn.telnyx.com/assets/branding/telnyx-logo-black.svg" alt="Telnyx Logo" width="200">
+  </center>
+  <hr>
+  <h1>Bridge Calls and Add Supervisor</h1>
+  <p>
+    1. First, dial your bridge call legs by entering Party A and Party B phone numbers below.
+  </p>
+  <form id="bridgeForm">
+    <label for="bridgeANumber">Bridge A Phone Number (E.164 format):</label>
+    <input type="text" id="bridgeANumber" name="bridgeANumber" placeholder="+14168305230" required>
+    <label for="bridgeBNumber">Bridge B Phone Number (E.164 format):</label>
+    <input type="text" id="bridgeBNumber" name="bridgeBNumber" placeholder="sip:phillip1991@sip.telnyx.com" required>
+    <button type="submit">Dial Bridge Legs</button>
+  </form>
+  <hr>
+  <p>
+    2. Then, dial a supervisor by entering a phone number and selecting a role.
+  </p>
+  <form id="supervisorForm">
+    <label for="supervisorNumber">Supervisor Phone Number (E.164 format):</label>
+    <input type="text" id="supervisorNumber" name="supervisorNumber" placeholder="+12345678903" required>
+    <label for="supervisorRole">Supervisor Role:</label>
+    <select id="supervisorRole" name="supervisorRole">
+      <option value="barge">Barge</option>
+      <option value="monitor">Monitor</option>
+      <option value="whisper">Whisper</option>
+    </select>
+    <button type="submit">Dial Supervisor</button>
+  </form>
+  <div id="result"></div>
+  <!-- Include Axios from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    // Handle the bridging of Party A and Party B.
+    document.getElementById('bridgeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const bridgeANumber = document.getElementById('bridgeANumber').value.trim();
+      const bridgeBNumber = document.getElementById('bridgeBNumber').value.trim();
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = 'Processing bridge call...';
+      try {
+        const response = await axios.post('/bridge-calls', { bridgeANumber, bridgeBNumber }, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        resultDiv.innerHTML = `<strong>Bridge call initiated:</strong> ${response.data.message}`;
+      } catch (error) {
+        resultDiv.innerHTML = `<strong>Error:</strong> ${error.response ? error.response.data.error : error.message}`;
+      }
+    });
+
+    // Handle the dialing of the supervisor.
+    document.getElementById('supervisorForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const supervisorNumber = document.getElementById('supervisorNumber').value.trim();
+      const supervisorRole = document.getElementById('supervisorRole').value;
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = 'Processing supervisor call...';
+      try {
+        const response = await axios.post('/bridge-supervisor', { supervisorNumber, supervisorRole }, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        resultDiv.innerHTML = `<strong>Success:</strong> ${response.data.message}<br><pre>${JSON.stringify(response.data.supervisor, null, 2)}</pre>`;
+      } catch (error) {
+        resultDiv.innerHTML = `<strong>Error:</strong> ${error.response ? error.response.data.error : error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
