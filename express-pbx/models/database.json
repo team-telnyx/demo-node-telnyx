@@ -1,0 +1,126 @@
+{
+	"extensions": [
+		{
+			"extension": "1001",
+			"type": "extension",
+			"name": "User 1001",
+			"did": "+12125551234",
+			"memberOf": ["sales", "support"],
+			"voicemail": true,
+			"email": "user@email.com",
+			"destination": "sip:credential1001@sip.telnyx.com",
+			"timeout": "15",
+			"timeoutDestination": "none",
+			"ringStrategy": null
+		},
+		{
+			"extension": "1002",
+			"type": "extension",
+			"name": "User 1002",
+			"did": "+18185551234",
+			"memberOf": ["accounts", "support"],
+			"voicemail": true,
+			"email": "user@email.com",
+			"destination": "sip:credential1002@sip.telnyx.com",
+			"timeout": "15",
+			"timeoutDestination": "none",
+			"ringStrategy": null
+		},
+		{
+			"extension": "1003",
+			"type": "extension",
+			"name": "User 1003",
+			"did": "+18185551234",
+			"memberOf": ["accounts", "support"],
+			"voicemail": false,
+			"email": "user@email.com",
+			"destination": "sip:credential1003@sip.telnyx.com",
+			"timeout": "25",
+			"timeoutDestination": "none",
+			"ringStrategy": null
+		},
+		{
+			"extension": "2001",
+			"type": "ringGroup",
+			"name": "sales",
+			"did": "none",
+			"memberOf": "none",
+			"voicemail": true,
+			"email": "none",
+			"destination": [
+				"sip:credential1001@sip.telnyx.com",
+				"sip:credential1002@sip.telnyx.com"
+			],
+			"timeout": "15",
+			"timeoutDestination": "none",
+			"ringStrategy": "simultaneous"
+		},
+		{
+			"extension": "2002",
+			"type": "ringGroup",
+			"name": "support",
+			"did": "none",
+			"memberOf": "none",
+			"voicemail": true,
+			"email": "none",
+			"destination": [
+				"sip:credential1001@sip.telnyx.com",
+				"sip:credential1003@sip.telnyx.com"
+			],
+			"timeout": "15",
+			"timeoutDestination": "none",
+			"ringStrategy": "sequential"
+		},
+		{
+
+			"extension": "2003",
+			"type": "ringGroup",
+			"name": "accounts",
+			"did": "none",
+			"memberOf": "none",
+			"voicemail": true,
+			"email": "none",
+			"destination": [
+				"sip:credential1003@sip.telnyx.com",
+				"sip:credential1002@sip.telnyx.com"
+			],
+			"timeout": "15",
+			"timeoutDestination": "none",
+			"ringStrategy": "simultaneous"
+		},
+		{
+			
+			"extension": "2004",
+			"type": "ringGroup",
+			"name": "accounts",
+			"did": "none",
+			"memberOf": "none",
+			"voicemail": true,
+			"email": "none",
+			"destination": [
+				"sip:credential1003@sip.telnyx.com",
+				"sip:credential1002@sip.telnyx.com"
+			],
+			"timeout": "5",
+			"timeoutDestination": "none",
+			"ringStrategy": "sequential"
+		}
+	],
+	"inboundRouting": [
+		{
+			"did": "+12125551234",
+			"extension": "1001",
+			"type": "extension"
+		},
+		{
+			"did": "+18185551234",
+			"extension": "1002",
+			"type": "extension"
+		},
+		{
+			"did": "+17035551234",
+			"extension": "2002",
+			"type": "ringGroup"
+		}
+	]
+}

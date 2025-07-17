@@ -63,9 +63,7 @@ typings/
 .env
 .env.test
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.production
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -122,6 +120,9 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
+
+# TypeScript v1 declaration files
+typings/
 
 # Optional npm cache directory
 .npm
@@ -185,9 +186,26 @@ Thumbs.db
 *.swo
 *~
 
-# Telnyx specific
-telnyx_webhook_secret.txt
-telnyx_api_key.txt
+# Backup files
+*.bak
+*.backup
+*.old
 
-# Local database files
-models/database_local.json 
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Audio/Video files (for voicemail recordings)
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.ogg
+*.flac
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z

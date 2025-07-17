@@ -1,0 +1,26 @@
+{
+  "name": "express-texml-ivr",
+  "description": "IVR with Telnyx TeXML",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Telnyx <support@telnyx.com> (https://telnyx.com)",
+  "type": "module",
+  "engines": {
+    "node": "^18 || >=20"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/team-telnyx/demo-node-telnyx/issues"
+  },
+  "homepage": "https://github.com/team-telnyx/demo-node-telnyx#readme",
+  "dependencies": {
+    "dotenv": "^16.4.0",
+    "express": "^4.21.1",
+    "node-cron": "^3.0.3",
+    "telnyx": "^2.0.0-beta.3",
+    "xml-formatter": "^3.6.3"
+  }
+}
