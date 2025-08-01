@@ -1,12 +1,7 @@
-import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { loadDatabase } from "./databaseLoader.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const database = JSON.parse(
-	readFileSync(join(__dirname, "./database.json"), "utf8")
-);
+// Load database with fallback system
+const database = loadDatabase();
 
 // Parse Extension Number from SIP URI
 const extensionNumberFromSipUri = (sipUri) => sipUri.split("@")[0];
@@ -124,4 +119,16 @@ export const lookupExtensionByNumber = (eventTo) => {
 				: [extensionRecord.destination],
 		};
 	}
+};
+
+export const getAllExtensions = () => {
+	return database.extensions;
+};
+
+export const getInboundRouting = () => {
+	return database.inboundRouting;
+};
+
+export const lookupInboundRouting = (did) => {
+	return database.inboundRouting.find(route => route.did === did);
 };

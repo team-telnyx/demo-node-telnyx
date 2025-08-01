@@ -1,4 +1,4 @@
-import * as db from "../models/db.js";
+import * as db from "../../utils/databaseUtils.js";
 
 // Parse Extension Number from SIP URI
 const extensionNumberFromSipUri = (sipUri) => sipUri.split("@")[0];
