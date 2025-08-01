@@ -1,131 +1,175 @@
-<div align="center">
+# Express PBX - Telnyx Demo Applications
 
-# Telnyx-Node TeXML PBX
+This directory contains two PBX implementations using different Telnyx voice technologies:
 
-![Telnyx](../logo-dark.png)
+## Applications
 
-Sample application demonstrating PBX Type Functionality w/ Extension to Extension Dialing and Ring Groups
+### 1. TeXML Application (`/TeXML`)
+- **Technology**: Telnyx TeXML (XML-based webhooks)
+- **Approach**: Stateless XML responses to webhooks
+- **Port**: Uses shared `PORT` from `.env`
+- **Connection**: Uses `TELNYX_TEXML_CONNECTION_ID`
 
-</div>
+### 2. Voice API Application (`/VoiceAPI`)
+- **Technology**: Telnyx Voice API (Real-time call control)
+- **Approach**: Direct API calls with call state management
+- **Port**: Uses shared `PORT` from `.env`
+- **Connection**: Uses `TELNYX_VOICEAPI_CONNECTION_ID`
 
-## Documentation & Tutorial
+## Shared Configuration
 
+Both applications use a single `.env` file in this directory for configuration.
 
-## Pre-Reqs
+### Setup
 
-You will need to set up:
-
-- [Telnyx Account](https://telnyx.com/sign-up?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
-- [Telnyx Phone Number](https://portal.telnyx.com/#/app/numbers/my-numbers?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) enabled with:
-- [Telnyx TeXML Application](https://developers.telnyx.com/docs/voice/programmable-voice/texml-setup)
-- [Telnyx Outbound Voice Profile](https://portal.telnyx.com/#/app/outbound-profiles?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)
-- [Telnyx SIP Connection (Credentials)](https://portal.telnyx.com/#/app/connections)
-- Ability to receive webhooks (with something like [ngrok](https://developers.telnyx.com/docs/development?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link#ngrok-setup))
-- [Node & NPM](https://developers.telnyx.com/docs/development?lang=node&utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link#developer-setup) installed
-
-## What you can do
-
-- Handle Basic PBX Functions
-- Receive a Call
-
-## Telnyx Misson Control Details
-
-- How to buy a phone number
-- How to register two different SIP users on your phone number (using Zoiper & the Telnyx WebRTC demo app)
-- How to answer an incoming call and play custom text-to-speech
-- How to prompt for and collect user button presses, and route calls based on those inputs
-- How to use a custom audio file instead of text-to-speech
-
-## Usage
-
-The following environmental variables need to be set
-
-| Variable               | Description                                                                                                                                              |
-| :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `TELNYX_API_KEY`       | Your [Telnyx API Key](https://portal.telnyx.com/#/app/api-keys?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link)              |
-| `TELNYX_PUBLIC_KEY`    | Your [Telnyx Public Key](https://portal.telnyx.com/#/app/account/public-key?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link) |
-| `PORT`                 | **Defaults to `8000`** The port the app will be served                                                                                                   |
-| `TELNYX_CONNECTION_ID` | The ID of the [**TeXML** call-control-connection](https://portal.telnyx.com/#/app/call-control/texml) to use for placing the calls                       |
-| `SUBDOMAIN`            | The Sip Subdomain configured on the [**TeXML** call-control-connection](https://portal.telnyx.com/#/app/call-control/texml) use for handling the calls   |
-| `BASE_URL`             | The Base URL for your server or Ngrok Forwarding https://1b2d5b7255f8.ngrok-free.app -> http://localhost:8000                                            |
-### .env file
-
-This app uses the excellent [dotenv](https://github.com/motdotla/dotenv) package to manage environment variables.
-
-Make a copy of [`.env.sample`](./.env.sample) and save as `.env` and update the variables to match your creds.
-
-```
-TELNYX_PUBLIC_KEY=
-TELNYX_API_KEY=
-TELNYX_CONNECTION_ID=
-PORT=
-SUBDOMAIN=
-BASE_URL=
+1. Copy the environment template:
+```bash
+cp .env.sample .env
 ```
 
-### Callback URLs For Telnyx Applications
+2. Configure your environment variables:
+```env
+# Shared Telnyx Configuration
+TELNYX_API_KEY=your_telnyx_api_key_here
+TELNYX_PUBLIC_KEY=your_telnyx_public_key_here
 
-| Callback Type                        | URL                         |
-| :----------------------------------- | :-------------------------- |
-| Inbound Call-Control Status Callback | `{ngrok-url}/texml/inbound` |
+# Different connection IDs for each app type
+TELNYX_TEXML_CONNECTION_ID=your_texml_connection_id_here
+TELNYX_VOICEAPI_CONNECTION_ID=your_voice_api_connection_id_here
 
-### Install
-
-Run the following commands to get started
-
-```
-$ git clone https://github.com/team-telnyx/demo-node-telnyx.git
-```
-
-### Notes!
-
-TeXML sends webhooks with Content-Type: `application/x-www-form-urlencoded`. As such; our express application should be configured to accept form encoded payloads.
-
-Adding `app.use(express.urlencoded({ extended: true }));` to the application allows us to reference `req.body` to get the Webhook data.
-
-### Ngrok
-
-This application is served on the port defined in the runtime environment (or in the `.env` file). Be sure to launch [ngrok](https://developers.telnyx.com/docs/development?utm_source=referral&utm_medium=github_referral&utm_campaign=cross-site-link#ngrok-setup) for that port
-
-```
-./ngrok http 8000
+# Shared server configuration
+PORT=8000
+BASE_URL=https://your-ngrok-url.ngrok-free.app
+SUBDOMAIN=your_sip_subdomain_here
 ```
 
-> Terminal should look _something_ like
+### Shared Database
 
+Both applications use a shared database configuration with a fallback system:
+
+### Database Loading Priority:
+1. **`database.json`** - Your local configuration (gitignored, for contributors)
+2. **`database.sample.json`** - Template file (committed to git)
+
+### First-time Setup:
+```bash
+# Copy the sample to create your local database
+cp database.sample.json database.json
+
+# Edit database.json with your extensions and routing
 ```
-ngrok by @inconshreveable                                                                                                                               (Ctrl+C to quit)
 
-Session Status                online
-Account                       Little Bobby Tables (Plan: Free)
-Version                       2.3.35
-Region                        United States (us)
-Web Interface                 http://127.0.0.1:4040
-Forwarding                    http://your-url.ngrok.io -> http://localhost:8000
-Forwarding                    https://your-url.ngrok.io -> http://localhost:8000
+### For Contributors:
+Your `database.json` file is automatically ignored by git, so you can safely customize it without affecting the repository.
 
-Connections                   ttl     opn     rt1     rt5     p50     p90
-                              0       0       0.00    0.00    0.00    0.00
+### Database Contents:
+- Extension configurations
+- Ring group definitions  
+- Inbound routing rules
+
+## Running the Applications
+
+**Important**: Only run one application at a time as they share the same port.
+
+### Quick Setup
+```bash
+# Install all dependencies (single install for both apps)
+npm install
+
+# Use the interactive switcher (recommended)
+npm run switch
 ```
 
-At this point you can point your application to generated ngrok URL + path (Example: `http://{your-url}.ngrok.io/texml/answer`).
+### Manual Application Start
 
-### Setup & Run
+#### TeXML Application
+```bash
+npm run texml
 
-#### Create a database
+# Development with auto-restart
+npm run texml:dev
+```
 
-Go to the [`models/database.json`](models/database.json) file and fill in:
+#### Voice API Application
+```bash
+npm run voiceapi
 
-- Extension Details in the format which is defined
+# Development with auto-restart
+npm run voiceapi:dev
+```
 
-#### Start the Server
+## Application Switcher
 
-Start the server `npm run start`
+The included `switcher.js` utility automatically configures your Telnyx connections when switching between applications.
 
-When you are able to run the server locally, the final step involves making your application accessible from the internet. So far, we've set up a local web server. This is typically not accessible from the public internet, making testing inbound requests to web applications difficult.
+### Features:
+- 🔄 **Automatic Configuration**: Sets webhook URLs and SIP subdomains
+- 📞 **Phone Number Management**: Updates all DIDs from database to use selected application
+- 🧹 **Conflict Resolution**: Clears settings from inactive applications
+- 📊 **Status Display**: Shows current connection and phone number assignments
+- ⚡ **Quick Switching**: One command to switch between apps
 
-The best workaround is a tunneling service. They come with client software that runs on your computer and opens an outgoing permanent connection to a publicly available server in a data center. Then, they assign a public URL (typically on a random or custom subdomain) on that server to your account. The public server acts as a proxy that accepts incoming connections to your URL, forwards (tunnels) them through the already established connection and sends them to the local web server as if they originated from the same machine. The most popular tunneling tool is `ngrok`. Check out the [ngrok setup](https://developers.telnyx.com/docs/development#ngrok-setup) walkthrough to set it up on your computer and start receiving webhooks from inbound messages to your newly created application.
+### Usage:
+```bash
+npm run switch
+```
 
-Once you've set up `ngrok` or another tunneling service you can add the public proxy URL to your Inbound Settings in the Mission Control Portal. To do this, click the edit symbol [✎] next to your [TeXML Applications](https://portal.telnyx.com/#/app/call-control/texml). In the "Inbound Settings" > "Webhook URL" field, paste the forwarding address from ngrok into the Webhook URL field. Add `texml/inbound` to the end of the URL to direct the request to the webhook endpoint in your server.
+The switcher will:
+1. Show you current connection and phone number configurations
+2. Let you choose which app to activate
+3. Clear conflicting settings from the other app
+4. Configure the chosen app with correct webhook URLs and subdomains
+5. Update all phone numbers from `inboundRouting` to use the selected connection
+6. Provide startup instructions and update summary
 
-For now you'll leave “Failover URL” blank, but if you'd like to have Telnyx resend the webhook in the case where sending to the Webhook URL fails, you can specify an alternate address in this field.
+### What it configures:
+- **TeXML Connection**: Webhook URL + SIP Subdomain + Phone Number Routing
+- **Voice API Connection**: Webhook URL + SIP Subdomain + Phone Number Routing
+- **Phone Numbers**: All DIDs from `database.json` inboundRouting automatically assigned to selected connection
+
+### Phone Number Management:
+The switcher reads all DIDs from your `database.json` file's `inboundRouting` section and automatically updates them on the Telnyx platform to use the selected application's connection. This ensures:
+- ✅ Incoming calls route to the correct application
+- ✅ No manual phone number configuration needed
+- ✅ Seamless switching between TeXML and Voice API
+- ✅ Clear reporting of successful/failed updates
+
+## Features (Both Applications)
+
+- ✅ **Inbound Call Handling** - Route incoming calls to extensions
+- ✅ **Extension-to-Extension Dialing** - Internal SIP calls
+- ✅ **Ring Groups** - Simultaneous and sequential ringing
+- ✅ **PSTN Outbound** - External call routing
+- ✅ **Voicemail** - Recording when unavailable
+- ✅ **DTMF Support** - Handle button presses
+
+## Webhook Configuration
+
+Configure your Telnyx connections with these webhook URLs:
+
+### TeXML Connection
+- **Webhook URL**: `{BASE_URL}/texml/inbound`
+
+### Voice API Connection
+- **Webhook URL**: `{BASE_URL}/voice/webhook`
+
+## Development
+
+Use ngrok for local development:
+```bash
+ngrok http 8000
+```
+
+Update your `.env` with the ngrok URL and configure your Telnyx connections accordingly.
+
+## Architecture Comparison
+
+| Feature | TeXML | Voice API |
+|---------|-------|-----------|
+| **Approach** | XML responses | Direct API calls |
+| **Call State** | Stateless | Stateful |
+| **Complexity** | Lower | Higher |
+| **Flexibility** | Medium | High |
+| **Real-time Control** | Limited | Full |
+
+Choose the approach that best fits your use case!

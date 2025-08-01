@@ -72,7 +72,6 @@
 			"ringStrategy": "sequential"
 		},
 		{
-
 			"extension": "2003",
 			"type": "ringGroup",
 			"name": "accounts",
@@ -89,7 +88,6 @@
 			"ringStrategy": "simultaneous"
 		},
 		{
-			
 			"extension": "2004",
 			"type": "ringGroup",
 			"name": "accounts",

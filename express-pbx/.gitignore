@@ -190,4 +190,7 @@ telnyx_webhook_secret.txt
 telnyx_api_key.txt
 
 # Local database files
-models/database_local.json 
+database.json
+
+# Claude Code memory file
+CLAUDE.md
