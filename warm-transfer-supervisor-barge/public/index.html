@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warm Transfer - Supervisor Barge</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      padding: 2rem;
+    }
+    h1 { margin-bottom: 0.25rem; color: #1a1a2e; }
+    .subtitle { color: #666; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    h2 { margin-bottom: 1rem; color: #16213e; font-size: 1.1rem; }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    .call-session {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s;
+    }
+    .call-session:hover { border-color: #4a90d9; }
+    .call-session:last-child { margin-bottom: 0; }
+
+    .call-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .call-from { font-size: 1.1rem; font-weight: 600; }
+
+    .status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .status-bridged { background: #d4edda; color: #155724; }
+    .status-dialing_agent, .status-ringing_agent { background: #fff3cd; color: #856404; }
+    .status-three_way { background: #cce5ff; color: #004085; }
+    .status-agent_left { background: #f8d7da; color: #721c24; }
+
+    .call-legs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .leg {
+      background: #f8f9fa;
+      border-radius: 6px;
+      padding: 0.6rem 0.75rem;
+    }
+    .leg-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 0.2rem;
+    }
+    .leg-id {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #555;
+      word-break: break-all;
+    }
+
+    .barge-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      padding-top: 0.75rem;
+      border-top: 1px solid #eee;
+    }
+    .barge-controls input {
+      flex: 1;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    .barge-controls input:focus { outline: none; border-color: #4a90d9; box-shadow: 0 0 0 2px rgba(74,144,217,0.2); }
+
+    .barge-controls select {
+      padding: 0.55rem 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      background: #fff;
+    }
+
+    button {
+      background: #4a90d9;
+      color: #fff;
+      border: none;
+      padding: 0.55rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    button:hover { background: #357abd; }
+    button:disabled { background: #aaa; cursor: not-allowed; }
+    button.btn-barge { background: #28a745; }
+    button.btn-barge:hover { background: #218838; }
+    button.btn-barge:disabled { background: #aaa; }
+
+    .no-calls { color: #999; font-style: italic; padding: 1rem 0; }
+
+    .call-message {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+    .msg-success { background: #d4edda; color: #155724; }
+    .msg-error { background: #f8d7da; color: #721c24; }
+
+    .agent-dest {
+      background: #e8f4fd;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      color: #0c5460;
+    }
+    .agent-dest strong { color: #084298; }
+
+    /* Instructions Note */
+    .instructions-note {
+      background: #fff8e1;
+      border: 1px solid #ffcc02;
+      border-left: 4px solid #ff9800;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .instructions-note .note-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e65100;
+    }
+    .instructions-note .note-header .excl {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: #ff9800;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 1rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .instructions-note h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #e65100;
+      margin: 0.75rem 0 0.35rem;
+    }
+    .instructions-note h3:first-of-type { margin-top: 0; }
+    .instructions-note ol, .instructions-note ul {
+      margin: 0 0 0 1.25rem;
+      font-size: 0.85rem;
+      color: #555;
+      line-height: 1.6;
+    }
+    .instructions-note code {
+      background: #fff3e0;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      font-family: monospace;
+      color: #bf360c;
+    }
+    .instructions-toggle {
+      background: none;
+      border: none;
+      color: #e65100;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+    .instructions-toggle:hover { color: #bf360c; background: none; }
+    .instructions-body { display: none; }
+    .instructions-body.open { display: block; }
+
+    /* Agent Destination Config */
+    .dest-form {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .dest-form input {
+      flex: 1;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-family: monospace;
+    }
+    .dest-form input:focus { outline: none; border-color: #4a90d9; box-shadow: 0 0 0 2px rgba(74,144,217,0.2); }
+    .dest-current {
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: #666;
+    }
+    .dest-current strong { color: #084298; font-family: monospace; }
+    .dest-msg {
+      margin-top: 0.5rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Warm Transfer - Supervisor Barge</h1>
+    <p class="subtitle">Incoming calls are bridged to the agent destination below. Use the controls to attach a supervisor to any active call.</p>
+
+    <div class="instructions-note">
+      <div class="note-header">
+        <span class="excl">!</span>
+        Setup &amp; Usage Instructions
+        <button class="instructions-toggle" onclick="toggleInstructions()">Show</button>
+      </div>
+      <div id="instructions-body" class="instructions-body">
+        <h3>Installation</h3>
+        <ol>
+          <li>Clone the repository and navigate to the <code>warm_transfer</code> directory.</li>
+          <li>Install dependencies: <code>npm install</code></li>
+          <li>Create a <code>.env</code> file with the following variables:
+            <ul>
+              <li><code>TELNYX_API_KEY</code> &mdash; Your Telnyx API key</li>
+              <li><code>TELNYX_CONNECTION_ID</code> &mdash; Your Call Control connection ID</li>
+              <li><code>TELNYX_PHONE_NUMBER</code> &mdash; Your Telnyx phone number (E.164 format)</li>
+              <li><code>AGENT_PHONE_NUMBER</code> &mdash; Default agent destination (phone or SIP URI)</li>
+              <li><code>PORT</code> &mdash; Server port (defaults to 3000)</li>
+            </ul>
+          </li>
+          <li>Ensure SSL certificates exist at the configured path, or update <code>index.js</code> for your environment.</li>
+          <li>Start the server: <code>npm start</code> (or <code>npm run dev</code> for auto-reload)</li>
+        </ol>
+
+        <h3>How to Use</h3>
+        <ol>
+          <li>Set the <strong>webhook URL</strong> on your Telnyx Call Control connection to <code>https://&lt;your-domain&gt;/webhooks</code>.</li>
+          <li>Update the <strong>Agent Destination</strong> below to the phone number or SIP URI where incoming calls should be forwarded.</li>
+          <li>When a call comes in, it will appear under <strong>Active Calls</strong> and automatically bridge to the agent.</li>
+          <li>Once bridged, enter a supervisor phone number or SIP URI and select a role:
+            <ul>
+              <li><strong>Barge</strong> &mdash; Supervisor can speak to both parties</li>
+              <li><strong>Whisper</strong> &mdash; Supervisor can speak only to the agent</li>
+              <li><strong>Monitor</strong> &mdash; Supervisor listens silently</li>
+            </ul>
+          </li>
+          <li>Click <strong>Attach Supervisor</strong> to dial the supervisor into the call.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Agent Destination</h2>
+      <div class="dest-form">
+        <input type="text" id="dest-input" placeholder="+1XXXXXXXXXX or sip:user@sip.telnyx.com" />
+        <button onclick="updateDestination()">Update</button>
+      </div>
+      <div class="dest-current">Currently forwarding to: <strong id="dest-display">loading...</strong></div>
+      <div id="dest-msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>Active Calls</h2>
+      <div id="calls-list">
+        <p class="no-calls">Waiting for incoming calls...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleInstructions() {
+      const body = document.getElementById('instructions-body');
+      const btn = document.querySelector('.instructions-toggle');
+      body.classList.toggle('open');
+      btn.textContent = body.classList.contains('open') ? 'Hide' : 'Show';
+    }
+
+    const callsList = document.getElementById('calls-list');
+    let activeCalls = [];
+    // Track input values so re-render doesn't lose them
+    const inputState = {};
+
+    // ─── Agent Destination ──────────────────────────────────────────────
+    async function loadDestination() {
+      try {
+        const res = await fetch('/api/agent-destination');
+        const data = await res.json();
+        document.getElementById('dest-display').textContent = data.destination;
+        document.getElementById('dest-input').placeholder = data.destination;
+      } catch (err) {
+        document.getElementById('dest-display').textContent = 'error loading';
+      }
+    }
+
+    async function updateDestination() {
+      const input = document.getElementById('dest-input');
+      const msgDiv = document.getElementById('dest-msg');
+      const destination = input.value.trim();
+      if (!destination) {
+        msgDiv.innerHTML = '<div class="dest-msg msg-error">Enter a phone number or SIP URI.</div>';
+        return;
+      }
+      try {
+        const res = await fetch('/api/agent-destination', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ destination }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('dest-display').textContent = data.destination;
+          input.value = '';
+          input.placeholder = data.destination;
+          msgDiv.innerHTML = '<div class="dest-msg msg-success">Agent destination updated!</div>';
+          setTimeout(() => msgDiv.innerHTML = '', 3000);
+        } else {
+          msgDiv.innerHTML = `<div class="dest-msg msg-error">Error: ${data.error}</div>`;
+        }
+      } catch (err) {
+        msgDiv.innerHTML = `<div class="dest-msg msg-error">Request failed: ${err.message}</div>`;
+      }
+    }
+
+    loadDestination();
+
+    function truncId(id) {
+      if (!id) return 'N/A';
+      return id.length > 24 ? id.substring(0, 24) + '...' : id;
+    }
+
+    function saveInputState() {
+      document.querySelectorAll('[data-call-id]').forEach(el => {
+        const callId = el.dataset.callId;
+        const phoneInput = el.querySelector('.phone-input');
+        const roleSelect = el.querySelector('.role-select');
+        if (phoneInput) {
+          inputState[callId] = {
+            phone: phoneInput.value,
+            role: roleSelect ? roleSelect.value : 'barge',
+            focused: document.activeElement === phoneInput,
+          };
+        }
+      });
+    }
+
+    function renderCalls() {
+      if (activeCalls.length === 0) {
+        callsList.innerHTML = '<p class="no-calls">Waiting for incoming calls...</p>';
+        return;
+      }
+
+      saveInputState();
+
+      callsList.innerHTML = activeCalls.map(call => {
+        const canBarge = call.status === 'bridged';
+        const hasSupervisor = call.status === 'three_way';
+        const saved = inputState[call.pstnCallControlId] || {};
+
+        return `
+          <div class="call-session" data-call-id="${call.pstnCallControlId}">
+            <div class="call-header">
+              <span class="call-from">Caller: ${call.from || 'Unknown'}</span>
+              <span class="status status-${call.status}">${call.status.replace(/_/g, ' ')}</span>
+            </div>
+
+            <div class="call-legs">
+              <div class="leg">
+                <div class="leg-label">PSTN (Leg A)</div>
+                <div class="leg-id">${truncId(call.pstnCallControlId)}</div>
+              </div>
+              <div class="leg">
+                <div class="leg-label">Agent (Leg B)</div>
+                <div class="leg-id">${truncId(call.agentCallControlId)}</div>
+              </div>
+              <div class="leg">
+                <div class="leg-label">Supervisor (Leg C)</div>
+                <div class="leg-id">${call.thirdPartyCallControlId ? truncId(call.thirdPartyCallControlId) : '<em style="color:#aaa">Not attached</em>'}</div>
+              </div>
+            </div>
+
+            ${canBarge ? `
+              <div class="barge-controls">
+                <input type="tel" class="phone-input" value="${saved.phone || ''}" placeholder="+1XXXXXXXXXX or SIP URI" />
+                <select class="role-select">
+                  <option value="barge" ${saved.role === 'barge' ? 'selected' : ''}>Barge</option>
+                  <option value="whisper" ${saved.role === 'whisper' ? 'selected' : ''}>Whisper</option>
+                  <option value="monitor" ${saved.role === 'monitor' ? 'selected' : ''}>Monitor</option>
+                </select>
+                <button class="btn-barge" onclick="dialSupervisor(this)">
+                  Attach Supervisor
+                </button>
+              </div>
+              <div class="msg-area"></div>
+            ` : ''}
+
+            ${hasSupervisor ? `
+              <div class="call-message msg-success">Supervisor is active on this call.</div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      // Restore focus
+      for (const [callId, saved] of Object.entries(inputState)) {
+        if (saved.focused) {
+          const el = document.querySelector(`[data-call-id="${callId}"] .phone-input`);
+          if (el) {
+            el.focus();
+            el.setSelectionRange(el.value.length, el.value.length);
+          }
+        }
+      }
+    }
+
+    async function dialSupervisor(btn) {
+      const card = btn.closest('.call-session');
+      const pstnCallControlId = card.dataset.callId;
+      const phoneInput = card.querySelector('.phone-input');
+      const roleSelect = card.querySelector('.role-select');
+      const msgDiv = card.querySelector('.msg-area');
+      const phoneNumber = phoneInput.value.trim();
+      const role = roleSelect.value;
+
+      if (!phoneNumber) {
+        msgDiv.innerHTML = '<div class="call-message msg-error">Enter a phone number or SIP URI.</div>';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Dialing...';
+      msgDiv.innerHTML = '';
+
+      try {
+        const res = await fetch('/api/dial-third-party', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumber, pstnCallControlId, supervisorRole: role }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          msgDiv.innerHTML = '<div class="call-message msg-success">Supervisor dialed! Connecting...</div>';
+          phoneInput.value = '';
+          delete inputState[pstnCallControlId];
+        } else {
+          msgDiv.innerHTML = `<div class="call-message msg-error">Error: ${data.error}</div>`;
+          btn.disabled = false;
+          btn.textContent = 'Attach Supervisor';
+        }
+      } catch (err) {
+        msgDiv.innerHTML = `<div class="call-message msg-error">Request failed: ${err.message}</div>`;
+        btn.disabled = false;
+        btn.textContent = 'Attach Supervisor';
+      }
+    }
+
+    // SSE — event-driven updates, no polling
+    const evtSource = new EventSource('/api/events');
+    evtSource.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      activeCalls = data.calls || [];
+      renderCalls();
+    };
+    evtSource.onerror = () => {
+      console.warn('SSE connection lost, retrying...');
+    };
+  </script>
+</body>
+</html>
