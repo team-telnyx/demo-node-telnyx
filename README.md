@@ -33,6 +33,7 @@ You will need to set up:
 | [Outbound Call IVR](outbound-call-ivr)                  | Example code to create an outbound call and present the callee with an option to press some digits. Leverages [TeXML](https://developers.telnyx.com/docs/v2/call-control/texml-setup) |
 | [Simple Call Control Application](express-call-control) | Example code to create a simple inbound call handler that speaks a message back as well as a simple form to submit an outbound call                                                   |
 | [Call Tracking](call-tracking)                          | Example code to create a basic call tracking and logging tool                                                                                                                         |
+| [Warm Transfer Supervisor Barge](warm-transfer-supervisor-barge) | Example code to warm transfer inbound calls to an agent with real-time supervisor barge/whisper/monitor via web dashboard                                              |
 
 ### Install
 
